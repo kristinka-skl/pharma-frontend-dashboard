@@ -8,7 +8,7 @@
 // } from '../types/book';
 // import { User } from '../types/user';
 import { LoginFormData } from '../types/auth';
-import { Order } from '../types/pharma';
+import { Customer, Order } from '../types/pharma';
 import { User } from '../types/user';
 import { nextServer } from './api';
 
@@ -46,6 +46,33 @@ export async function getOrders(
 ): Promise<FetchOrdersResponse> {
   const { data } = await nextServer.get<FetchOrdersResponse>(
     '/orders',
+    // {
+    //   params: {
+    //     page,
+    //     limit,
+    //     ...(title && { title }),
+    //     ...(author && { author }),
+    //   },
+    // }
+  );
+  return data;
+}
+
+interface FetchCustomersResponse {
+  customers: Customer[];
+  totalPages: number;
+  page: number;
+  perPage: number;
+}
+
+export async function getCustomers(
+  // page: number,
+  // limit: number,
+  // title?: string,
+  // author?: string
+): Promise<FetchCustomersResponse> {
+  const { data } = await nextServer.get<FetchCustomersResponse>(
+    '/customers',
     // {
     //   params: {
     //     page,
