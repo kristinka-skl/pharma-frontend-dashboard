@@ -33,7 +33,7 @@ export const login = async (data: LoginFormData) => {
 // };
 
 interface FetchOrdersResponse {
-  results: Order[];
+  orders: Order[];
   totalPages: number;
   page: number;
   perPage: number;
