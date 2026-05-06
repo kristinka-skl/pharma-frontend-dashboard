@@ -1,0 +1,50 @@
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4); 
+  z-index: 90; 
+}
+
+.sidebar {
+   width: 78px;
+  border-right: 1px solid rgba(29, 30, 33, 0.1);
+  border-top: 1px solid rgba(29, 30, 33, 0.1);
+  background-color: var(--background-2);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 100;
+  transform: translateX(-100%); 
+  transition: transform 0.3s ease;
+  z-index: 100;
+}
+
+.sidebar.open {
+  transform: translateX(0); 
+}
+
+.mobileLogout {
+  display: block; 
+}
+
+@media screen and (min-width: 1440px) {
+  .sidebar {
+    position: static; 
+    transform: translateX(0); 
+    height: 100%;
+    z-index: 1;
+  }
+  .backdrop {
+    display: none; 
+  }
+  .closeBtn {
+    display: none; 
+  }
+  .mobileLogout {
+    display: none; 
+  }
+}

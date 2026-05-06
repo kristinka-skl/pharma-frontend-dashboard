@@ -14,18 +14,14 @@ export async function POST(req: NextRequest) {
     console.log('apiRes.headers[set-cookie]:', cookieSet);
     
  if (cookieSet) {
-	    // Якщо set-cookie — масив, беремо як є, інакше примусово робимо масив
 	    const cookieArray = Array.isArray(cookieSet) ? cookieSet : [cookieSet];
-	    // Проходимо по кожному cookie
 	    for (const cookieStr of cookieArray) {
 	      const parsed = parse(cookieStr);
-	      // Створюємо опції для cookie
 	      const options = {
 	        expires: parsed.Expires ? new Date(parsed.Expires) : undefined,
 	        path: parsed.Path,
 	        maxAge: Number(parsed['Max-Age']),
 	      };
-	      // Встановлюємо токени
 	      if (parsed.accessToken) {
 	        cookieStore.set('accessToken', parsed.accessToken, options);
 	      }

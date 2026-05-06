@@ -27,10 +27,10 @@ export const login = async (data: LoginFormData) => {
 //   return res.data;
 // };
 
-// export const logout = async () => {
-//   const res = await nextServer.post('/users/signout');
-//   return res.data;
-// };
+export const logout = async () => {
+  const res = await nextServer.get('/user/logout');
+  return res.data;
+};
 
 interface FetchOrdersResponse {
   orders: Order[];

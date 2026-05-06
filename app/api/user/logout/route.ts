@@ -3,16 +3,15 @@ import { isAxiosError } from 'axios';
 import { cookies } from 'next/headers';
 import { api } from '../../api';
 
-export async function POST() {
+export async function GET() {
   const cookieStore = await cookies();
 
   try {
     const token = cookieStore.get('accessToken')?.value;
 
     if (token) {
-      await api.post(
-        '/users/signout',
-        {},
+      await api.get(
+        '/user/logout',        
         {
           headers: {
             Authorization: `Bearer ${token}`,

@@ -1,0 +1,12 @@
+.desktopLogout {
+  display: none; /* За замовчуванням на мобілці ховаємо */
+}
+
+@media screen and (min-width: 1440px) {
+  .burgerMenu {
+    display: none; /* Ховаємо бургер на десктопі */
+  }
+  .desktopLogout {
+    display: block; /* Показуємо логаут у хедері на десктопі */
+  }
+}
