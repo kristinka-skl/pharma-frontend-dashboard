@@ -1,24 +1,27 @@
-'use client'
+'use client';
 
-import BasicTable from "@/app/Components/Table/Table";
-import { getOrders } from "@/app/lib/clientApi";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { Toaster } from "react-hot-toast";
+import OrdersTable from '@/app/Components/Table/OrdersTable';
 
-export default function OrdersPageClient(){
+import { getOrders } from '@/app/lib/clientApi';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { Toaster } from 'react-hot-toast';
 
-const { data, isError, isSuccess } = useQuery({
-    queryKey: ["orders"],
+export default function OrdersPageClient() {
+  const { data, isError, isSuccess } = useQuery({
+    queryKey: ['orders'],
     queryFn: () => getOrders(),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
   });
 
-
-    console.log('orders:', data)
-    return <section><h1>Orders page</h1>
-    {isSuccess && <BasicTable dataList={data.orders}/>}
-    <Toaster/></section>
+  console.log('orders:', data);
+  return (
+    <section>
+      <h1>Orders page</h1>
+      {isSuccess && 
+          <OrdersTable dataList={data.orders} />        
+      }
+      <Toaster />
+    </section>
+  );
 }
-
-

@@ -10,7 +10,8 @@ export type Order = {
 
 export type Customer = {    
     name: string,
-    photo: string,
+    image: string,
+    photo?: string,
     email: string,
     address: string,
     phone: string,

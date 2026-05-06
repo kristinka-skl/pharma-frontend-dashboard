@@ -1,28 +1,17 @@
 import 'modern-normalize/modern-normalize.css';
 import type { Metadata } from 'next';
-import localFont from 'next/font/local';
+import { Inter } from 'next/font/google';
 import './globals.css';
-import Container from './Components/Shared/Container/Container';
-import ToasterProvider from './Components/Shared/Toaster/Toaster';
+// import Container from './Components/Shared/Container/Container';
+// import ToasterProvider from './Components/Shared/Toaster/Toaster';
 import TanStackProvider from './Components/TanStackProvider/TanStackProvider';
 
-
-// const gilroy = localFont({
-//   src: [
-//     {
-//       path: '../public/fonts/Gilroy-Medium.woff2',
-//       weight: '500',
-//       style: 'normal',
-//     },
-//     {
-//       path: '../public/fonts/Gilroy-Bold.woff2',
-//       weight: '700',
-//       style: 'normal',
-//     },
-//   ],
-//   variable: '--font-gilroy',
-//   display: 'swap',
-// });
+const interSans = Inter({
+  variable: '--font-inter-sans',
+  weight: ['400', '500', '600', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 // export const metadata: Metadata = {
 //   title: 'Read Journey',
@@ -53,7 +42,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" 
-    // className={`${gilroy.variable}`}
+    className={`${interSans.variable}`}
     >
       <body>
         <TanStackProvider>

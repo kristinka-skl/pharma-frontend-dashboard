@@ -3,10 +3,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { login as loginUser } from '../../lib/clientApi';
-import css from './LoginForm.module.css'
+import css from './LoginForm.module.css';
 import { LoginFormData } from '@/app/types/auth';
 import { useForm } from 'react-hook-form';
-import Link from 'next/link';
+
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ApiError } from '@/app/api/api';
@@ -31,7 +31,7 @@ export default function LoginForm() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const setUser = useAuthStore((state) => state.setUser);
-  // const [error, setError] = useState('');
+
   const {
     register,
     handleSubmit,
@@ -69,18 +69,14 @@ export default function LoginForm() {
             errors.email ? css.hasError : dirtyFields.email ? css.isSuccess : ''
           }`}
         >
-          <label htmlFor="email" className={css.label}>
-            Mail:
-          </label>
           <input
             id="email"
             className={css.input}
             {...register('email')}
-            placeholder="Your@email.com"
+            placeholder="Email address"
           />
-
-          {errors.email && <p className={css.error}>{errors.email.message}</p>}
         </div>
+        {errors.email && <p className={css.error}>{errors.email.message}</p>}
       </div>
 
       <div className={css.fieldWrapper}>
@@ -93,15 +89,12 @@ export default function LoginForm() {
                 : ''
           }`}
         >
-          <label htmlFor="password" className={css.label}>
-            Password:
-          </label>
           <input
             id="password"
             type={showPassword ? 'text' : 'password'}
             className={css.input}
             {...register('password')}
-            placeholder="Yourpasswordhere"
+            placeholder="Password"
           />
           <button
             type="button"
@@ -110,32 +103,28 @@ export default function LoginForm() {
           >
             {showPassword ? (
               <svg className={css.eye} width={18} height={18}>
-                <use href="/sprite.svg#icon-eye"></use>
+                <use href="/sprite.svg#eye"></use>
               </svg>
             ) : (
               <svg className={css.eye} width={18} height={18}>
-                <use href="/sprite.svg#icon-eye-off"></use>
+                <use href="/sprite.svg#eye-off"></use>
               </svg>
             )}
           </button>
-
-          {errors.password ? (
-            <p className={css.error}>{errors.password.message}</p>
-          ) : dirtyFields.password ? (
-            <p className={css.successText}>Password is secure</p>
-          ) : null}
         </div>
+        
+        {errors.password ? (
+          <p className={css.error}>{errors.password.message}</p>
+        ) : dirtyFields.password ? (
+          <p className={css.successText}>Password is secure</p>
+        ) : null}
       </div>
-      <div className={`${css.fieldWrapper} ${css.hidden}`}>
-        <div className={css.inputGroup}></div>
-      </div>
+
       <div className={css.actions}>
         <button type="submit" className={css.submitBtn} disabled={isSubmitting}>
           {isSubmitting ? 'Logging in...' : 'Log in'}
         </button>
-        <Link href="/register" className={css.loginLink}>
-          Don’t have an account?
-        </Link>
+       
       </div>
     </form>
   );
