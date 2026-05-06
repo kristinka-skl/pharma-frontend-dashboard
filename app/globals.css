@@ -1,13 +1,12 @@
 :root {
-  --background: #f9f9f9;
-  --card-background: #1f1f1f;
-  --input-background: #262626;
-  --foreground:   #141414;
-  --text-accent: #686868;
-  --hover: rgba(249, 249, 249, 0.1);
-  --error: #e90516;
-  --success: #30b94d;
-  --font-main: var(--font-gilroy), sans-serif;
+  --main-black: #1d1e21;
+	--accent: #59b17a;
+	--accent-2: #e85050;
+	--text: #dcdddf;
+	--background: #e7f1ed;
+	--background-2: #f7f8fa;
+	--background-3: #fff;
+  --font-family: var(--font-inter-sans), 'Inter', sans-serif;
 }
 
 html {
@@ -22,9 +21,9 @@ body {
 
 body {
   min-height: 100%;
-  color: var(--foreground);
-  background: var(--background);
-  font-family: var(--font-main), sans-serif;
+  color: var(--main-black);
+  background: var(--background-2);
+  font-family: var(--font-inter-sans), sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

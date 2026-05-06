@@ -1,0 +1,77 @@
+.loginSection {
+  padding: 24px 20px;
+  max-width: 375px;
+  margin: 0 auto;
+  height: 100vh;
+}
+.loginIconWrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 148px;
+}
+.logoText {
+  font-weight: 600;
+  font-size: 20px;
+  letter-spacing: -0.03em;
+  color: var(--main-black);
+}
+.contentWrapper{
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+.heroTextWrapper {
+  max-width: 335px;
+  position: relative;
+}
+.heroImage{
+    position: absolute;
+    top: -60px;
+    right: 20px;
+}
+.heroText {
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 1.21429;
+  color: var(--main-black);
+}
+.heroTextAccent {
+  color: var(--accent);
+}
+@media screen and (min-width: 768px) {
+  .loginSection {
+    padding: 24px 32px;
+    max-width: 768px;
+  }
+  .heroTextWrapper {
+  max-width: 614px;  
+}
+.heroImage{    
+    top: -107px;
+    right: 20px;
+    width: 179px;
+    height: 175px;
+}
+  .heroText{
+    font-size: 54px;
+line-height: 1.11111;
+  }
+  .contentWrapper{    
+    gap: 50px;
+}
+}
+@media screen and (min-width: 1440px) {
+  .loginSection {
+    padding: 28px 100px;
+    max-width: 1440px;
+  }
+  .loginIconWrapper{
+    margin-bottom: 256px;
+  }
+  .contentWrapper{    
+    flex-direction: row;
+    gap: 150px;
+}
+}

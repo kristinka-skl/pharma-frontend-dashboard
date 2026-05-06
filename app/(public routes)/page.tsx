@@ -1,3 +1,7 @@
+// import { useRouter } from "next/navigation";
+
 export default function Home() {
-  return <div>Hello</div>;
+  // const router = useRouter();
+  // router.push('/login');
+  return null;
 }
