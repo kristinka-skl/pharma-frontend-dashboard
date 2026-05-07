@@ -1,12 +1,70 @@
+.header {
+  padding: 17px 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+  border-bottom: 1px solid rgba(29, 30, 33, 0.1);
+}
 .desktopLogout {
-  display: none; /* За замовчуванням на мобілці ховаємо */
+  display: none;
+}
+.burgerMenu {
+  background-color: transparent;
+}
+.burgerMenuIcon {
+  stroke: var(--main-black);
+  fill: var(--main-black);
+}
+.headerTitle {
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1.2;
+  color: var(--main-black);
+  margin-bottom: 4px;
+}
+.curPageAndEmailWrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(29, 30, 33, 0.4);
+}
+@media screen and (min-width: 768px) {
+  .header {
+    padding: 15px 32px;
+  }
+  .headerTitle {  
+  font-size: 24px;
+  line-height: 1.16;
+}
+.logoIcon{
+    width: 40px;
+    height: 40px;
+    margin-right: 12px;
 }
 
+}
 @media screen and (min-width: 1440px) {
   .burgerMenu {
-    display: none; /* Ховаємо бургер на десктопі */
+    display: none;
   }
   .desktopLogout {
-    display: block; /* Показуємо логаут у хедері на десктопі */
+    display: block;
+  }
+  .header{
+    padding: 15px 20px;
+  }
+  .headerDesktopLayout{
+    padding: 0 40px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .logoIcon{
+    margin-right: 0;
   }
 }

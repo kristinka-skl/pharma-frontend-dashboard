@@ -8,7 +8,7 @@ export default function Login() {
       <div className={css.loginIconWrapper}>
         <Image
           className={css.logoIcon}
-          src="/images/logo-pharma.svg"
+          src="/images/logo.png"
           width={44}
           height={44}
           alt="logo pharmacy"
@@ -17,7 +17,7 @@ export default function Login() {
       </div>
       <div className={css.contentWrapper}>
       <div className={css.heroTextWrapper}>
-        <Image className={css.heroImage} src='/images/white-round-pill.svg' width={95} height={93} alt='white pill'/>
+        <Image className={css.heroImage} src='/images/white-round-pill.png' width={95} height={93} alt='white pill'/>
         <p className={css.heroText}>
           Your medication, delivered Say goodbye to all{' '}
           <span className={css.heroTextAccent}>your healthcare</span> worries

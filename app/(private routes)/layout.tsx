@@ -10,10 +10,12 @@ export default function PrivateLayout({
 }) {
   return (
     <div className={css.appWrapper}>
-      <Sidebar />
-      <div className={css.contentWrapper}>
-        <Header />
-        <main className={css.mainContent}>{children}</main>
+      <Header />
+      <div className={css.mainContainer}>
+        <Sidebar />
+        <div className={css.contentWrapper}>
+          <main className={css.mainContent}>{children}</main>
+        </div>
       </div>
     </div>
   );
