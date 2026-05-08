@@ -1,0 +1,115 @@
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 90;
+}
+
+.sidebar {
+  width: 78px;
+  border-right: 1px solid rgba(29, 30, 33, 0.1);
+  border-top: 1px solid rgba(29, 30, 33, 0.1);
+  background-color: var(--background-2);
+  padding: 20px;
+  padding-top: 92px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 100;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+.closeBtn {
+  position: absolute;
+  top: 20px;
+  right: 14px;
+  background-color: transparent;
+  transition: all 0.3ms ease-in;
+}
+.closeBtnIcon{
+    fill: var(--main-black);
+    stroke: var(--main-black);
+}
+.closeBtn:hover {  
+  transform: scale(1.1);
+}
+
+.closeBtn:active {
+  transform: scale(0.90); 
+}
+.menuList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.menuItem {
+  width: 38px;
+  height: 38px;
+  border-radius: 100%;
+  background-color: var(--background-3);
+  box-shadow: 0 -1px 7px 0 rgba(71, 71, 71, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;  
+}
+.menuItemIcon{
+    fill: var(--text);
+    stroke: var(--text);
+    transition: all 0.3ms ease-in;
+}
+.menuItemIcon.active{
+    fill: var(--accent);
+    stroke: var(--accent);
+}
+.menuItemIcon:hover, .menuItem:hover{
+    transform: scale(1.15);
+    fill: var(--accent);
+}
+.mobileLogout {
+  display: block;
+}
+@media screen and (min-width: 768px) {
+    .sidebar{
+        width: 84px;
+    }
+    .menuItem{
+        width: 44px;
+        height: 44px;
+    }
+    .menuItemIcon{
+        width: 16px;
+        height: 16px;
+    }
+}
+@media screen and (min-width: 1440px) {
+  .sidebar {
+    position: static;
+    transform: translateX(0);
+    height: 100%;
+    z-index: 1;
+    width: 80px;
+    padding: 40px 18px;
+  }
+  .backdrop {
+    display: none;
+  }
+  .closeBtn {
+    display: none;
+  }
+  .mobileLogout {
+    display: none;
+  }
+}

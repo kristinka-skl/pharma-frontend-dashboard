@@ -5,6 +5,7 @@ import './globals.css';
 // import Container from './Components/Shared/Container/Container';
 // import ToasterProvider from './Components/Shared/Toaster/Toaster';
 import TanStackProvider from './Components/TanStackProvider/TanStackProvider';
+import Container from './Components/Container/Container';
 
 const interSans = Inter({
   variable: '--font-inter-sans',
@@ -46,10 +47,10 @@ export default function RootLayout({
     >
       <body>
         <TanStackProvider>
-          {/* <Container> */}
+          <Container>
             {children}
             {/* <ToasterProvider /> */}
-          {/* </Container> */}
+          </Container>
         </TanStackProvider>
       </body>
     </html>

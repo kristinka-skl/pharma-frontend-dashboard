@@ -1,0 +1,20 @@
+.appWrapper {
+  display: flex;
+  flex-direction: column; 
+  min-height: 100vh; 
+}
+
+.mainContainer {
+  display: flex; 
+  flex-grow: 1; 
+}
+
+.contentWrapper {
+  flex-grow: 1; 
+  background-color: #F8F9FA; 
+  overflow-y: auto; 
+}
+
+.mainContent {
+  padding: 20px 40px 40px 40px; 
+}
