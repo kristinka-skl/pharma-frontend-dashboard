@@ -8,7 +8,7 @@
 // } from '../types/book';
 // import { User } from '../types/user';
 import { LoginFormData } from '../types/auth';
-import { Customer, Order } from '../types/pharma';
+import { Customer, incomeExpens, Order, recentCustomer } from '../types/pharma';
 import { User } from '../types/user';
 import { nextServer } from './api';
 
@@ -84,6 +84,23 @@ export async function getCustomers(
   );
   return data;
 }
+
+interface FetchDashboardResponse {
+  statistics: {
+    products: number;
+    suppliers: number;
+    customers: number;
+  };
+  recentCustomers: recentCustomer[];
+  incomeExpenses: incomeExpens[];
+}
+
+export async function getDashboard(){
+  const { data } = await nextServer.get<FetchDashboardResponse>(
+    '/dashboard')
+    return data;
+}
+
 
 // export async function addBookFromRecommended(book_id: string) {
 //   const { data } = await nextServer.post<Book>(`/books/add/${book_id}`);
