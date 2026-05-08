@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { useAuthStore } from '@/app/store/authStore';
 import { usePathname } from 'next/navigation';
 import { appPages } from '@/app/_utils/utils';
+import Link from 'next/link';
 
 export default function Header() {
   const toggleSidebar = useUIStore((state) => state.toggleSidebar);
@@ -22,13 +23,14 @@ export default function Header() {
           <use href="/sprite.svg#icon-menu-burger"></use>
         </svg>
       </button>
+      <Link href='/dashboard'>
       <Image
         className={css.logoIcon}
         src="/images/logo-header.png"
         width={32}
         height={32}
         alt="logo pharmacy"
-      ></Image>
+      ></Image></Link>
 
 <div className={css.headerDesktopLayout}>
       <div className={css.titleAndInfoWrapper}>

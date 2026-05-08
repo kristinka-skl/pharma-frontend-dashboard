@@ -103,11 +103,11 @@ export default function LoginForm() {
           >
             {showPassword ? (
               <svg className={css.eye} width={18} height={18}>
-                <use href="/sprite.svg#eye"></use>
+                <use href="/sprite.svg#icon-eye"></use>
               </svg>
             ) : (
               <svg className={css.eye} width={18} height={18}>
-                <use href="/sprite.svg#eye-off"></use>
+                <use href="/sprite.svg#icon-eye-off"></use>
               </svg>
             )}
           </button>
