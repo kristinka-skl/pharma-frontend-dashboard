@@ -5,7 +5,8 @@
   border-radius: 8px;
 }
 
-.tableTitle, .css-1fcnpbm-MuiTypography-root {
+.tableTitle,
+.css-1fcnpbm-MuiTypography-root {
   background-color: #e7f1ed;
   padding: 20px;
   border: 0px solid rgba(29, 30, 33, 0.08);
@@ -16,9 +17,20 @@
   line-height: 1.33333;
   color: #1d1e21;
 }
+
 .photoAndName {
   display: flex;
   flex-direction: row;
   gap: 8px;
   align-items: center;
+}
+
+.tableRow {
+  height: 58px;
+}
+
+@media screen and (min-width: 768px) {
+  .tableRow {
+    height: 72px;
+  }
 }

@@ -8,7 +8,7 @@
 // } from '../types/book';
 // import { User } from '../types/user';
 import { LoginFormData } from '../types/auth';
-import { Customer, incomeExpens, Order, recentCustomer } from '../types/pharma';
+import { Customer, IncomeExpense as IncomeExpense, Order, RecentCustomer as RecentCustomer } from '../types/pharma';
 import { User } from '../types/user';
 import { nextServer } from './api';
 
@@ -91,8 +91,8 @@ interface FetchDashboardResponse {
     suppliers: number;
     customers: number;
   };
-  recentCustomers: recentCustomer[];
-  incomeExpenses: incomeExpens[];
+  recentCustomers: RecentCustomer[];
+  incomeExpenses: IncomeExpense[];
 }
 
 export async function getDashboard(){

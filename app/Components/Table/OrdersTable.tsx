@@ -33,7 +33,7 @@ export default function OrdersTable({ dataList }: BasicTableProps) {
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 511, maxWidth: 1280 }} aria-label="simple table">
           <TableHead>
-            <TableRow>
+            <TableRow className={cssModule.tableRow}>
               <TableCell>User Info</TableCell>
               <TableCell align="left">Address</TableCell>
               <TableCell align="left">Products</TableCell>

@@ -19,7 +19,7 @@ export type Customer = {
     register_date: string,
 }
 
-export interface recentCustomer {
+export interface RecentCustomer {
   name: string;
   email: string;
   spent: number;
@@ -29,8 +29,8 @@ export interface recentCustomer {
   register_date?: string;
 }
 
-export interface incomeExpens {
+export interface IncomeExpense {
   type: string;
   name: string;
-  amount: number;
+  amount: string;
 }
