@@ -24,6 +24,7 @@ export interface RecentCustomer {
   email: string;
   spent: number;
   photo?: string;
+  image?: string,
   address?: string;
   phone?: string;
   register_date?: string;

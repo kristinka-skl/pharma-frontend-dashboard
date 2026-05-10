@@ -7,6 +7,8 @@ import './globals.css';
 import TanStackProvider from './Components/TanStackProvider/TanStackProvider';
 import Container from './Components/Container/Container';
 
+import MuiThemeProvider from './Components/MuiThemeProvider/ThemeProvider';
+
 const interSans = Inter({
   variable: '--font-inter-sans',
   weight: ['400', '500', '600', '700'],
@@ -42,15 +44,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" 
-    className={`${interSans.variable}`}
-    >
+    <html lang="en" className={`${interSans.variable}`}>
       <body>
         <TanStackProvider>
-          <Container>
-            {children}
-            {/* <ToasterProvider /> */}
-          </Container>
+          <MuiThemeProvider>
+            <Container>
+              {children}
+              {/* <ToasterProvider /> */}
+            </Container>
+          </MuiThemeProvider>
         </TanStackProvider>
       </body>
     </html>
