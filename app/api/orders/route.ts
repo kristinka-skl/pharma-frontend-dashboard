@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     console.log('cookieStore.toString() = ', cookieStore.toString())
     const search = request.nextUrl.searchParams.get('search') ?? '';
     // const page = Number(request.nextUrl.searchParams.get('page') ?? 1);
-    // const rawTag = request.nextUrl.searchParams.get('tag') ?? '';
+  
     // const tag = rawTag === 'All' ? '' : rawTag;
 
     const res = await api('/orders', {
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
         ...(search !== '' && { search }),
         // page,
         // perPage: 12,
-        // ...(tag && { tag }),
+        // ...(search && { search }),
       },
       headers: {
         Cookie: cookieStore.toString(),

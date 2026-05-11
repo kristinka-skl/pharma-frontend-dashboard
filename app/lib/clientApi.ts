@@ -41,19 +41,18 @@ interface FetchOrdersResponse {
 export async function getOrders(
   // page: number,
   // limit: number,
-  // title?: string,
-  // author?: string
+  search?: string,
+
 ): Promise<FetchOrdersResponse> {
   const { data } = await nextServer.get<FetchOrdersResponse>(
     '/orders',
-    // {
-    //   params: {
-    //     page,
-    //     limit,
-    //     ...(title && { title }),
-    //     ...(author && { author }),
-    //   },
-    // }
+    {
+      params: {
+        // page,
+        // limit,
+        ...(search && { search })    //  
+      },
+    }
   );
   return data;
 }
