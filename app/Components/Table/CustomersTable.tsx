@@ -1,6 +1,6 @@
-import { Customer, Order } from "@/app/types/pharma";
+import { Customer } from "@/app/types/pharma";
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
-import css from 'styled-jsx/css';
+// import css from 'styled-jsx/css';
 import cssModule from './Table.module.css'
 import Image from "next/image";
 

@@ -35,3 +35,5 @@ export interface IncomeExpense {
   name: string;
   amount: string;
 }
+
+export type TransactionType = 'Income' | 'Expense' | 'Error'; 

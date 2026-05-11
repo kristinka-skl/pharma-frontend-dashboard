@@ -55,9 +55,9 @@ export default function RecentCustomersTable({ dataList }: BasicTableProps) {
                   row.image || row.photo || '/images/default-avatar.png';
                 return (
                   <TableRow
-                    className={cssModule.tableRow}
+                    
                     key={row.name}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 }}}
                   >
                     <TableCell component="th" scope="row">
                       <div className={cssModule.photoAndName}>
