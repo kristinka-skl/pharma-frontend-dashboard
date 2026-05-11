@@ -36,7 +36,10 @@ export default function SearchForm({placeholder}: SearchFormProps) {
 
       const params = new URLSearchParams(searchParams);
 
-      if (data.name) params.set('search', data.name);
+      if (data.name) {
+        params.set('search', data.name);
+        params.delete('page');    
+    }
       else params.delete('search');
 
       router.replace(

@@ -39,8 +39,8 @@ interface FetchOrdersResponse {
   perPage: number;
 }
 export async function getOrders(
-  // page: number,
-  // limit: number,
+  page: number,
+  perPage: number,
   search?: string,
 
 ): Promise<FetchOrdersResponse> {
@@ -48,9 +48,9 @@ export async function getOrders(
     '/orders',
     {
       params: {
-        // page,
-        // limit,
-        ...(search && { search })    //  
+        page,
+        perPage,
+        ...(search && { search })    
       },
     }
   );
