@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { api } from '../api';
 import { cookies } from 'next/headers';
 import { isAxiosError } from 'axios';
+import { perPage } from '@/app/_utils/utils';
 // import { logErrorResponse } from '../_utils/utils';
 
 export async function GET(request: NextRequest) {
@@ -11,16 +12,15 @@ export async function GET(request: NextRequest) {
     console.log('cookieStore:', cookieStore)
     console.log('cookieStore.toString() = ', cookieStore.toString())
     const search = request.nextUrl.searchParams.get('search') ?? '';
-    // const page = Number(request.nextUrl.searchParams.get('page') ?? 1);
-    // const rawTag = request.nextUrl.searchParams.get('tag') ?? '';
-    // const tag = rawTag === 'All' ? '' : rawTag;
+    const page = Number(request.nextUrl.searchParams.get('page') ?? 1);
+
 
     const res = await api('/orders', {
       params: {
         ...(search !== '' && { search }),
-        // page,
-        // perPage: 12,
-        // ...(tag && { tag }),
+        page,
+        perPage,
+       
       },
       headers: {
         Cookie: cookieStore.toString(),

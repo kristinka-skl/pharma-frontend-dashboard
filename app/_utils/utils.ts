@@ -21,3 +21,5 @@ appPages.set("/orders", "All orders");
 appPages.set("/products", "All products");
 appPages.set("/suppliers", "All suppliers");
 appPages.set("/customers", "All customers");
+
+export const perPage = 5;

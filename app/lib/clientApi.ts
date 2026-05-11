@@ -39,21 +39,20 @@ interface FetchOrdersResponse {
   perPage: number;
 }
 export async function getOrders(
-  // page: number,
-  // limit: number,
-  // title?: string,
-  // author?: string
+  page: number,
+  perPage: number,
+  search?: string,
+
 ): Promise<FetchOrdersResponse> {
   const { data } = await nextServer.get<FetchOrdersResponse>(
     '/orders',
-    // {
-    //   params: {
-    //     page,
-    //     limit,
-    //     ...(title && { title }),
-    //     ...(author && { author }),
-    //   },
-    // }
+    {
+      params: {
+        page,
+        perPage,
+        ...(search && { search })    
+      },
+    }
   );
   return data;
 }

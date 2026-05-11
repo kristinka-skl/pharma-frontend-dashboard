@@ -37,3 +37,7 @@ export interface IncomeExpense {
 }
 
 export type TransactionType = 'Income' | 'Expense' | 'Error'; 
+
+export type SearchFormData = {
+    name: string
+}
