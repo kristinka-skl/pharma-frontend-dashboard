@@ -16,5 +16,16 @@
 }
 
 .mainContent {
-  padding: 20px 40px 40px 40px; 
+  padding: 20px; 
 }
+@media screen and (min-width: 768px) {
+    .mainContent {
+  padding: 32px; 
+}
+}
+@media screen and (min-width: 1440px) {
+        .mainContent {
+  padding: 21px 40px; 
+}
+}
+

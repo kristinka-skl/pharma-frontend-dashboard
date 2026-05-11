@@ -18,3 +18,22 @@ export type Customer = {
     spent: string,
     register_date: string,
 }
+
+export interface RecentCustomer {
+  name: string;
+  email: string;
+  spent: number;
+  photo?: string;
+  image?: string,
+  address?: string;
+  phone?: string;
+  register_date?: string;
+}
+
+export interface IncomeExpense {
+  type: string;
+  name: string;
+  amount: string;
+}
+
+export type TransactionType = 'Income' | 'Expense' | 'Error'; 
