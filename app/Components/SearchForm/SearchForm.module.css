@@ -1,0 +1,112 @@
+.form {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.fieldWrapper {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.inputGroup {
+  display: flex;
+  align-items: center;
+  background-color: var(--background-3);
+  border: 1px solid rgba(29, 30, 33, 0.1);
+  border-radius: 60px;
+  padding: 13px 18px;
+  width: 215px;
+  transition: border-color 0.3s ease;
+}
+
+.inputGroup:focus-within {
+  border-color: var(--accent);
+}
+
+.input {
+  background: transparent;
+  border: none;
+  color: var(--main-black);
+  width: 100%;
+  flex-grow: 1;
+  outline: none;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.input::placeholder {
+  color: rgba(29, 30, 33, 0.4);
+}
+.inputGroup.hasError {
+  border-color: var(--accent-2);
+}
+.inputGroup.isSuccess {
+  border-color: var(--accent);
+}
+
+.error {
+  color: var(--accent-2);
+  position: absolute;
+  bottom: 3px;
+  right: 16px;
+  font-size: 11px;
+  margin: 0;
+  padding: 0;
+}
+
+.successText {
+  position: absolute;
+  bottom: -15px;
+  left: 16px;
+  color: var(--accent);
+  font-size: 11px;
+  margin: 0;
+  padding: 0;
+}
+.submitBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 60px;
+  border: none;
+  padding: 13px 30px;
+  width: 112px;
+  height: 44px;
+  background-color: var(--accent);
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--background-3);
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.submitBtn:hover {
+  opacity: 0.9;
+}
+
+.submitBtn:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+.filterIcon {
+  width: 14px;
+  height: 14px;
+  stroke: var(--background-2);
+  fill: none;
+}
+
+@media screen and (min-width: 768px) {
+  .submitBtn {
+    height: 44px;
+    width: 116px;
+    font-size: 14px;
+line-height: 1.28571;
+  }
+  .inputGroup{
+    width: 224px;
+  }
+}

@@ -10,17 +10,14 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 interface SearchFormProps {
   placeholder: string;
-  // onFilterClick: (data: SearchFormData) => void,
+  
 }
 
 const schema = yup.object({
-  name: yup.string().trim().required(),
+  name: yup.string().trim().default('')
 });
 
-export default function SearchForm({
-  placeholder,
-  // onFilterClick
-}: SearchFormProps) {
+export default function SearchForm({placeholder}: SearchFormProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -35,26 +32,18 @@ export default function SearchForm({
   });
 
   const onSubmit = async (data: SearchFormData) => {
-    try {
-      //   const res = onFilterClick(data);
+    try {  
 
       const params = new URLSearchParams(searchParams);
 
       if (data.name) params.set('search', data.name);
-      else params.delete('name');
+      else params.delete('search');
 
       router.replace(
-        `${pathname}?${params.toString()}`
-        //   { scroll: false }
+        `${pathname}?${params.toString()}`, { scroll: false }
       );
 
-      //   if (res) {
-
-      //     toast.success('Login successful!');
-
-      //   } else {
-      //     toast.error('Invalid email or password');
-      //   }
+      
     } catch (error) {
       const errorMessage =
         (error as ApiError).response?.data?.error ??

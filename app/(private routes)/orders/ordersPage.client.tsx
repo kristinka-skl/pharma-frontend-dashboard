@@ -1,15 +1,15 @@
 'use client';
 
 import OrdersTable from '@/app/Components/Table/OrdersTable';
-import css from './ordersPage.module.css'
+import css from './ordersPage.module.css';
 import { getOrders } from '@/app/lib/clientApi';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import SearchForm from '@/app/Components/SearchForm/SearchForm';
 import { useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function OrdersPageClient() {
-
   const searchParams = useSearchParams();
 
   const search = searchParams.get('search') || undefined;
@@ -19,15 +19,18 @@ export default function OrdersPageClient() {
     placeholderData: keepPreviousData,
     refetchOnMount: false,
   });
-
+ useEffect(() => {    
+    if (isSuccess && data?.orders.length === 0) {
+      toast.error('Nothing was found');
+    }
+  }, [data, isSuccess]);
   console.log('orders:', data);
   return (
     <section className={css.ordersSection}>
       <h1 className={css.visuallyHidden}>Orders page</h1>
-      <SearchForm placeholder='User Name' />
-      {isSuccess && 
-          <OrdersTable dataList={data.orders} />        
-      }
+      <SearchForm placeholder="User Name" />
+
+      {isSuccess && <OrdersTable dataList={data.orders} />}
       <Toaster />
     </section>
   );
