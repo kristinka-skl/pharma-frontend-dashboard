@@ -53,6 +53,7 @@ export interface Product{
 }
 
 export interface ProductFormData {
+    
   name: string;
   category: string;
   stock: number;

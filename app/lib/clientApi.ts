@@ -13,6 +13,7 @@ import {
   IncomeExpense as IncomeExpense,
   Order,
   Product,
+  ProductFormData,
   RecentCustomer as RecentCustomer,
 } from '../types/pharma';
 import { User } from '../types/user';
@@ -123,17 +124,22 @@ export async function getProducts(
 //   return data;
 // }
 
-// export async function addBook(newBook: BookFormData): Promise<Book> {
-//   const { data } = await nextServer.post<Book>('/books/add', newBook);
-//   return data;
-// }
+export async function addProduct(newProduct: ProductFormData): Promise<Product> {
+  const { data } = await nextServer.post<Product>('/products', newProduct);
+  return data;
+}
 
+export async function updateProduct(product_id: string, formData: ProductFormData){
+  const { data } = await nextServer.put<Product>(`products/${product_id}`, formData);
+  return data;
+}
 
 
 export async function deleteProduct(product_id: string) {
   const { data } = await nextServer.delete<Product>(`products/${product_id}`);
   return data;
 }
+
 
 // export async function getBookDetails(id: string): Promise<OwnBook> {
 //   const { data } = await nextServer.get<OwnBook>(`/books/${id}`);

@@ -1,7 +1,7 @@
 'use client';
 
-import { perPage } from '@/app/_utils/utils';
-import { deleteProduct, getProducts } from '@/app/lib/clientApi';
+import { getErrorMessage, perPage } from '@/app/_utils/utils';
+import { deleteProduct, getProducts, addProduct, updateProduct } from '@/app/lib/clientApi'; 
 import {
   keepPreviousData,
   useMutation,
@@ -23,6 +23,7 @@ export default function ProductsPageClient() {
   const router = useRouter();
   const pathname = usePathname();
   const queryClient = useQueryClient();
+  
   const search = searchParams.get('search') || undefined;
   const page = Number(searchParams.get('page')) || 1;
 
@@ -35,24 +36,65 @@ export default function ProductsPageClient() {
     placeholderData: keepPreviousData,
     refetchOnMount: false,
   });
+
+  const { mutate: mutateDelete } = useMutation({
+    mutationFn: async (id: string) => await deleteProduct(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      toast.success('Successfully deleted!');
+    },
+    onError: () => {
+      toast.error('Sorry, something went wrong. Please try again.');
+    },
+  });
+
+  const { mutate: mutateUpdate, isPending: isUpdating } = useMutation({
+    mutationFn: async ({ id, formData }: { id: string; formData: ProductFormData }) => 
+      await updateProduct(id, formData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      toast.success('Product updated successfully!');
+      setIsModalOpen(false); 
+    },
+    onError: (error) => {
+      const message = getErrorMessage(error);
+      toast.error(message);
+    },
+  });
+
+  const { mutate: mutateAdd, isPending: isAdding } = useMutation({
+    mutationFn: async (newProduct: ProductFormData) => await addProduct(newProduct),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      toast.success('Product added successfully!');
+      setIsModalOpen(false);
+    },
+    onError: (error) => {
+      const message = getErrorMessage(error);
+      toast.error(message);
+    },
+  });
   const handleOpenAddModal = () => {
     setSelectedProduct(null);
     setIsModalOpen(true);
   };
 
-  const handleSubmitProduct = async (formData: ProductFormData) => {
-    try {
-      if (selectedProduct) {
-        // await updateProduct(selectedProduct._id, formData);
-        toast.success('Product updated successfully!');
-      } else {
-        // await addProduct(formData);
-        toast.success('Product added successfully!');
-      }
+  const handleDeleteProduct = (id: string) => {
+    mutateDelete(id); 
+  };
 
-      queryClient.invalidateQueries({ queryKey: ['products'] });
-    } catch (error) {
-      toast.error('Something went wrong');
+  const handleSubmitProduct = (formData: ProductFormData) => {
+    const cleanData = {
+      name: formData.name,
+      category: formData.category,
+      stock: Number(formData.stock), 
+      suppliers: formData.suppliers,
+      price: Number(formData.price),
+    };
+    if (selectedProduct) {
+      mutateUpdate({ id: selectedProduct._id, formData: cleanData }); 
+    } else {
+      mutateAdd(cleanData); 
     }
   };
 
@@ -70,31 +112,14 @@ export default function ProductsPageClient() {
     router.push(`${pathname}?${params.toString()}`);
   };
 
-
-const { mutate, isPending, variables } = useMutation({
-    mutationFn: async (id: string) => await deleteProduct(id),
-    onSuccess() {
-      queryClient.invalidateQueries({
-        queryKey: ['products'],
-      });
-      toast('Successfully deleted!');
-    },
-    onError: () => {
-      toast.error('Sorry, something went wrong. Please try again.');
-    },
-  });
-
-  const handleDeleteProduct = async (id: string) => {
-    mutate(id);
-  };
- if (isLoading) {
+  if (isLoading) {
     return 
-    // <Loader />;
+     // <Loader />;
   }
-  console.log('products:', data);
+
   return (
     <section className={css.products}>
-      <h1 className={css.visuallyHidden}>Customers page</h1>
+      <h1 className={css.visuallyHidden}>Products page</h1>
       <div className={css.searchFormAndActions}>
         <SearchForm placeholder="Product Name" />
         <div className={css.actions}>
@@ -106,9 +131,10 @@ const { mutate, isPending, variables } = useMutation({
           <p>Add a new product</p>
         </div>
       </div>
+      
       {isSuccess && (
         <ProductsTable
-        onDelete={(productId: string) => handleDeleteProduct(productId)}
+          onDelete={handleDeleteProduct}
           dataList={data.products}
           onEdit={(product: Product) => {
             setSelectedProduct(product);
@@ -116,6 +142,7 @@ const { mutate, isPending, variables } = useMutation({
           }}
         />
       )}
+      
       {totalPagesFromBackend > 1 && (
         <DotsPagination
           totalPages={totalPagesFromBackend}
@@ -124,11 +151,13 @@ const { mutate, isPending, variables } = useMutation({
         />
       )}
 
+      
       <ProductModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         initialData={selectedProduct}
         onSubmit={handleSubmitProduct}
+        isSubmittingData={isAdding || isUpdating} 
       />
       <Toaster />
     </section>
