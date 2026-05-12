@@ -1,9 +1,10 @@
 'use client';
 
 import { perPage } from '@/app/_utils/utils';
-import { getProducts } from '@/app/lib/clientApi';
+import { deleteProduct, getProducts } from '@/app/lib/clientApi';
 import {
   keepPreviousData,
+  useMutation,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
@@ -28,7 +29,7 @@ export default function ProductsPageClient() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-  const { data, isError, isSuccess } = useQuery({
+  const { data, isError, isSuccess, isLoading } = useQuery({
     queryKey: ['products', search, page],
     queryFn: () => getProducts(page, perPage, search),
     placeholderData: keepPreviousData,
@@ -69,6 +70,27 @@ export default function ProductsPageClient() {
     router.push(`${pathname}?${params.toString()}`);
   };
 
+
+const { mutate, isPending, variables } = useMutation({
+    mutationFn: async (id: string) => await deleteProduct(id),
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: ['products'],
+      });
+      toast('Successfully deleted!');
+    },
+    onError: () => {
+      toast.error('Sorry, something went wrong. Please try again.');
+    },
+  });
+
+  const handleDeleteProduct = async (id: string) => {
+    mutate(id);
+  };
+ if (isLoading) {
+    return 
+    // <Loader />;
+  }
   console.log('products:', data);
   return (
     <section className={css.products}>
@@ -86,6 +108,7 @@ export default function ProductsPageClient() {
       </div>
       {isSuccess && (
         <ProductsTable
+        onDelete={(productId: string) => handleDeleteProduct(productId)}
           dataList={data.products}
           onEdit={(product: Product) => {
             setSelectedProduct(product);

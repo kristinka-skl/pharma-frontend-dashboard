@@ -128,20 +128,12 @@ export async function getProducts(
 //   return data;
 // }
 
-// export async function getOwnBooks(status?: string): Promise<OwnBook[]> {
-//   const { data } = await nextServer.get<OwnBook[]>('/books/own', {
-//     params: {
-//       status: status !== 'allBooks' ? status : undefined,
-//     },
-//   });
 
-//   return data;
-// }
 
-// export async function deleteBookFromLibrary(book_id: string) {
-//   const { data } = await nextServer.delete<Book>(`/books/remove/${book_id}`);
-//   return data;
-// }
+export async function deleteProduct(product_id: string) {
+  const { data } = await nextServer.delete<Product>(`products/${product_id}`);
+  return data;
+}
 
 // export async function getBookDetails(id: string): Promise<OwnBook> {
 //   const { data } = await nextServer.get<OwnBook>(`/books/${id}`);

@@ -12,16 +12,23 @@ import {
 // import css from 'styled-jsx/css';
 import cssModule from './Table.module.css';
 
-
 interface BasicTableProps {
   dataList: Product[];
   onEdit: (product: Product) => void;
+  onDelete: (productId: string) => void;
 }
 
-export default function ProductsTable({ dataList, onEdit }: BasicTableProps) {
+export default function ProductsTable({
+  dataList,
+  onEdit,
+  onDelete,
+}: BasicTableProps) {
   console.log('dataList:', dataList);
   return (
-    <Box className={cssModule.box} sx={{ minWidth: { xs: '511px', md: '960px', lg: '1280px' } }}>
+    <Box
+      className={cssModule.box}
+      sx={{ minWidth: { xs: '511px', md: '960px', lg: '1280px' } }}
+    >
       <Typography
         className={cssModule.tableTitle}
         variant="tableTitle"
@@ -30,36 +37,83 @@ export default function ProductsTable({ dataList, onEdit }: BasicTableProps) {
         All products
       </Typography>
       <TableContainer>
-        <Table sx={{ minWidth: 511, maxWidth: 1280, 
-          tableLayout: 'fixed' 
-          }} aria-label="products table">
+        <Table
+          sx={{ minWidth: 511, maxWidth: 1280, tableLayout: 'fixed' }}
+          aria-label="products table"
+        >
           <TableHead>
-            <TableRow className={cssModule.tableRow}
-            sx={{ height: { xs: '42px', md: '58px' } }}
+            <TableRow
+              className={cssModule.tableRow}
+              sx={{ height: { xs: '42px', md: '58px' } }}
             >
               <TableCell sx={{ width: '22%' }}>Product Info</TableCell>
-              <TableCell sx={{ width: '20%' }} align="left">Category</TableCell>
-              <TableCell sx={{ width: '16%' }} align="left">Stock</TableCell>
-              <TableCell sx={{ width: '21%' }} align="left">Supplier</TableCell>
-              <TableCell sx={{ width: '13%' }} align="left">Price</TableCell>
-              <TableCell sx={{ width: '13%' }} align="left">Action</TableCell>
+              <TableCell sx={{ width: '20%' }} align="left">
+                Category
+              </TableCell>
+              <TableCell sx={{ width: '16%' }} align="left">
+                Stock
+              </TableCell>
+              <TableCell sx={{ width: '21%' }} align="left">
+                Supplier
+              </TableCell>
+              <TableCell sx={{ width: '13%' }} align="left">
+                Price
+              </TableCell>
+              <TableCell sx={{ width: '13%' }} align="left">
+                Action
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {dataList &&
               dataList.map((row) => {
-                
                 return (
                   <TableRow
                     key={row._id}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
-                    <TableCell component="th" scope="row" sx={{ wordBreak: { xs: 'break-all', md: 'normal' }, overflowWrap: 'anywhere' }}>{row.name}</TableCell>
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      sx={{
+                        wordBreak: { xs: 'break-all', md: 'normal' },
+                        overflowWrap: 'anywhere',
+                      }}
+                    >
+                      {row.name}
+                    </TableCell>
                     <TableCell align="left">{row.category}</TableCell>
                     <TableCell align="left">{row.stock}</TableCell>
                     <TableCell align="left">{row.suppliers}</TableCell>
                     <TableCell align="left">{row.price}</TableCell>
-                    <TableCell align="left"><button onClick={() => onEdit(row)}>E</button> D</TableCell>
+                    <TableCell align="left">
+                      <div className={cssModule.actions}>
+                        <button
+                          className={`${cssModule.actionBtn} ${cssModule.updBtn}`}
+                          onClick={() => onEdit(row)}
+                        >
+                          <svg
+                            className={cssModule.icon}
+                            width={16}
+                            height={16}
+                          >
+                            <use href="./sprite.svg#icon-edit"></use>
+                          </svg>
+                        </button>
+                        <button
+                          className={`${cssModule.actionBtn} ${cssModule.delBtn}`}
+                          onClick={() => onDelete(row._id)}
+                        >
+                          <svg
+                            className={cssModule.icon}
+                            width={16}
+                            height={16}
+                          >
+                            <use href="./sprite.svg#icon-trash"></use>
+                          </svg>
+                        </button>
+                      </div>
+                    </TableCell>
                   </TableRow>
                 );
               })}
