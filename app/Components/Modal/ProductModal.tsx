@@ -21,6 +21,7 @@ interface ProductModalProps {
   onClose: () => void;
   initialData?: Product | null;
   onSubmit: (data: ProductFormData) => Promise<void> | void;
+  isSubmittingData: boolean;
 }
 
 const CATEGORIES = [
@@ -34,20 +35,31 @@ const CATEGORIES = [
   'Orthopedic Products',
   'Baby Care',
 ];
+const MAX_PRICE = 10000000;
+const MAX_STOCK = 1000000;
+const MAX_STRING = 1000;
 
 const schema = yup.object({
-  name: yup.string().required('Required'),
+  name: yup
+    .string()
+    .max(MAX_STRING, 'Max 1000 characters')
+    .required('Required'),
   category: yup.string().required('Required').oneOf(CATEGORIES, 'Required'),
   stock: yup
     .number()
     .typeError('Must be a number')
     .min(0, 'Min 0')
+    .max(MAX_STOCK, `Max stock is ${MAX_STOCK}`)
     .required('Required'),
-  suppliers: yup.string().required('Required'),
+  suppliers: yup
+    .string()
+    .max(MAX_STRING, 'Max 1000 characters')
+    .required('Required'),
   price: yup
     .number()
     .typeError('Must be a number')
-    .min(0, 'Min 0')
+    .positive('Must be > 0')
+    .max(MAX_PRICE, `Max price is ${MAX_PRICE}`)
     .required('Required'),
 });
 
@@ -100,10 +112,16 @@ export default function ProductModal({
   onClose,
   initialData,
   onSubmit,
+  isSubmittingData,
 }: ProductModalProps) {
   const isEditMode = Boolean(initialData);
 
-  const { control, handleSubmit, reset, formState: { isSubmitting }, } = useForm<ProductFormData>({
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = useForm<ProductFormData>({
     resolver: yupResolver(schema),
     mode: 'onChange',
   });
@@ -126,7 +144,7 @@ export default function ProductModal({
     <Dialog
       open={isOpen}
       onClose={onClose}
-      maxWidth={false}
+      maxWidth={false}      
       slotProps={{
         paper: {
           sx: {
@@ -153,8 +171,8 @@ export default function ProductModal({
 
       <form
         onSubmit={handleSubmit(async (data) => {
-          await onSubmit(data); 
-          onClose(); 
+          await onSubmit(data);
+          onClose();
         })}
       >
         <DialogContent className={css.flexContainer}>
@@ -209,20 +227,20 @@ export default function ProductModal({
                               bgcolor: 'rgba(255, 255, 255, 0.1)',
                             },
                             '&::-webkit-scrollbar': {
-                              width: '6px', 
+                              width: '6px',
                             },
                             '&::-webkit-scrollbar-track': {
                               backgroundColor: 'transparent',
                               marginTop: '8px',
                               marginBottom: '8px',
                             },
-                            
+
                             '&::-webkit-scrollbar-thumb': {
                               backgroundColor: 'rgba(255, 255, 255, 0.4)',
                               borderRadius: '10px',
                             },
                             '&::-webkit-scrollbar-thumb:hover': {
-                              backgroundColor: 'rgba(255, 255, 255, 0.6)', 
+                              backgroundColor: 'rgba(255, 255, 255, 0.6)',
                             },
                           },
                         },
@@ -252,6 +270,12 @@ export default function ProductModal({
                 type="number"
                 placeholder="Stock"
                 fullWidth
+                slotProps={{
+                  htmlInput: {
+                    max: MAX_STOCK,
+                    maxLength: 8,
+                  },
+                }}
                 sx={getInputSx(fieldState.isDirty, !!fieldState.error)}
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
@@ -283,6 +307,12 @@ export default function ProductModal({
                 type="number"
                 placeholder="Price"
                 fullWidth
+                slotProps={{
+                  htmlInput: {
+                    max: MAX_PRICE,
+                    maxLength: 8,
+                  },
+                }}
                 sx={getInputSx(fieldState.isDirty, !!fieldState.error)}
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
@@ -291,23 +321,26 @@ export default function ProductModal({
           />
         </DialogContent>
 
-  <div className={css.actions}>
+        <div className={css.actions}>
           <button
             type="submit"
             className={`${css.baseBtn} ${css.submitBtn}`}
-            disabled={isSubmitting} 
+            disabled={isSubmitting}
           >
-           
-            {isSubmitting 
-              ? (isEditMode ? 'Saving...' : 'Adding...') 
-              : (isEditMode ? 'Save' : 'Add')}
+            {isSubmittingData
+              ? isEditMode
+                ? 'Saving...'
+                : 'Adding...'
+              : isEditMode
+                ? 'Save'
+                : 'Add'}
           </button>
-          
+
           <button
-            type="button" 
+            type="button"
             onClick={onClose}
             className={`${css.baseBtn} ${css.cancelBtn}`}
-            disabled={isSubmitting} 
+            disabled={isSubmitting}
           >
             Cancel
           </button>

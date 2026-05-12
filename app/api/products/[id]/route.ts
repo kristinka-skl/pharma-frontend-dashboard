@@ -1,25 +1,22 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { api } from '../api';
-import { cookies } from 'next/headers';
+import { api } from '@/app/api/api';
 import { isAxiosError } from 'axios';
-import { perPage } from '@/app/_utils/utils';
-// import { logErrorResponse } from '../_utils/utils';
+import { cookies } from 'next/headers';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request: NextRequest) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
-    
     const cookieStore = await cookies();
-    const search = request.nextUrl.searchParams.get('search') ?? '';
-    const page = Number(request.nextUrl.searchParams.get('page') ?? 1);
+    const token = cookieStore.get('accessToken')?.value;
 
+    if (!token) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
-    const res = await api('/products', {
-      params: {
-        ...(search !== '' && { search }),
-        page,
-        perPage,
-       
-      },
+    const { id } = await params;
+    const res = await api.delete(`products/${id}`, {
       headers: {
         Cookie: cookieStore.toString(),
       },
@@ -28,21 +25,23 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(res.data, { status: res.status });
   } catch (error) {
     if (isAxiosError(error)) {
-    //   logErrorResponse(error.response?.data);
+      const errorMessage = error.response?.data?.message || error.message;
       return NextResponse.json(
-        { error: error.message, response: error.response?.data },
-        { status: error.status }
+        { error: errorMessage },
+        { status: error.response?.status || 500 }
       );
     }
-    // logErrorResponse({ message: (error as Error).message });
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 }
 
-
-
-
-export async function POST(request: NextRequest) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get('accessToken')?.value;
@@ -52,8 +51,8 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-
-    const res = await api.post('/products', body, {
+    const { id } = await params;
+    const res = await api.put(`products/${id}`, body, {
       headers: {
         Cookie: cookieStore.toString(),
       },
@@ -75,4 +74,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

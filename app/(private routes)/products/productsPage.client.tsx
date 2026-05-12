@@ -1,9 +1,10 @@
 'use client';
 
-import { perPage } from '@/app/_utils/utils';
-import { getProducts } from '@/app/lib/clientApi';
+import { getErrorMessage, perPage } from '@/app/_utils/utils';
+import { deleteProduct, getProducts, addProduct, updateProduct } from '@/app/lib/clientApi'; 
 import {
   keepPreviousData,
+  useMutation,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
@@ -22,36 +23,78 @@ export default function ProductsPageClient() {
   const router = useRouter();
   const pathname = usePathname();
   const queryClient = useQueryClient();
+  
   const search = searchParams.get('search') || undefined;
   const page = Number(searchParams.get('page')) || 1;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-  const { data, isError, isSuccess } = useQuery({
+  const { data, isError, isSuccess, isLoading } = useQuery({
     queryKey: ['products', search, page],
     queryFn: () => getProducts(page, perPage, search),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
+  });
+
+  const { mutate: mutateDelete } = useMutation({
+    mutationFn: async (id: string) => await deleteProduct(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      toast.success('Successfully deleted!');
+    },
+    onError: () => {
+      toast.error('Sorry, something went wrong. Please try again.');
+    },
+  });
+
+  const { mutate: mutateUpdate, isPending: isUpdating } = useMutation({
+    mutationFn: async ({ id, formData }: { id: string; formData: ProductFormData }) => 
+      await updateProduct(id, formData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      toast.success('Product updated successfully!');
+      setIsModalOpen(false); 
+    },
+    onError: (error) => {
+      const message = getErrorMessage(error);
+      toast.error(message);
+    },
+  });
+
+  const { mutate: mutateAdd, isPending: isAdding } = useMutation({
+    mutationFn: async (newProduct: ProductFormData) => await addProduct(newProduct),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      toast.success('Product added successfully!');
+      setIsModalOpen(false);
+    },
+    onError: (error) => {
+      const message = getErrorMessage(error);
+      toast.error(message);
+    },
   });
   const handleOpenAddModal = () => {
     setSelectedProduct(null);
     setIsModalOpen(true);
   };
 
-  const handleSubmitProduct = async (formData: ProductFormData) => {
-    try {
-      if (selectedProduct) {
-        // await updateProduct(selectedProduct._id, formData);
-        toast.success('Product updated successfully!');
-      } else {
-        // await addProduct(formData);
-        toast.success('Product added successfully!');
-      }
+  const handleDeleteProduct = (id: string) => {
+    mutateDelete(id); 
+  };
 
-      queryClient.invalidateQueries({ queryKey: ['products'] });
-    } catch (error) {
-      toast.error('Something went wrong');
+  const handleSubmitProduct = (formData: ProductFormData) => {
+    const cleanData = {
+      name: formData.name,
+      category: formData.category,
+      stock: Number(formData.stock), 
+      suppliers: formData.suppliers,
+      price: Number(formData.price),
+    };
+    if (selectedProduct) {
+      mutateUpdate({ id: selectedProduct._id, formData: cleanData }); 
+    } else {
+      mutateAdd(cleanData); 
     }
   };
 
@@ -69,10 +112,14 @@ export default function ProductsPageClient() {
     router.push(`${pathname}?${params.toString()}`);
   };
 
-  console.log('products:', data);
+  if (isLoading) {
+    return 
+     // <Loader />;
+  }
+
   return (
     <section className={css.products}>
-      <h1 className={css.visuallyHidden}>Customers page</h1>
+      <h1 className={css.visuallyHidden}>Products page</h1>
       <div className={css.searchFormAndActions}>
         <SearchForm placeholder="Product Name" />
         <div className={css.actions}>
@@ -84,8 +131,10 @@ export default function ProductsPageClient() {
           <p>Add a new product</p>
         </div>
       </div>
+      
       {isSuccess && (
         <ProductsTable
+          onDelete={handleDeleteProduct}
           dataList={data.products}
           onEdit={(product: Product) => {
             setSelectedProduct(product);
@@ -93,6 +142,7 @@ export default function ProductsPageClient() {
           }}
         />
       )}
+      
       {totalPagesFromBackend > 1 && (
         <DotsPagination
           totalPages={totalPagesFromBackend}
@@ -101,11 +151,13 @@ export default function ProductsPageClient() {
         />
       )}
 
+      
       <ProductModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         initialData={selectedProduct}
         onSubmit={handleSubmitProduct}
+        isSubmittingData={isAdding || isUpdating} 
       />
       <Toaster />
     </section>

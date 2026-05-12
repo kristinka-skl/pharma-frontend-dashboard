@@ -28,7 +28,40 @@
 .tableRow {
   height: 58px;
 }
-
+.actions{
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+.actionBtn{
+  background-color: transparent;
+  cursor: pointer;  
+border-radius: 30px;
+padding: 8px;
+width: 32px;
+height: 32px;
+display: flex;
+align-items: center;
+justify-content: center;
+transition: all 0.3ms ease-in;
+}
+.actionBtn:hover{
+  transform: scale(1.1);
+}
+.updBtn{
+  border: 1px solid var(--accent);
+}
+.delBtn{
+  border: 1px solid var(--accent-2);
+}
+.updBtn .icon{
+  stroke: var(--accent);
+  fill: none;
+}
+.delBtn .icon{
+  stroke: var(--accent-2);
+  fill: none;
+}
 
 @media screen and (min-width: 768px) {
   .tableRow {
