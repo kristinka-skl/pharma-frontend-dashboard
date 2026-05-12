@@ -1,0 +1,62 @@
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+  clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+.searchFormAndActions{
+    display: flex;
+    flex-direction: column;    
+}
+.actions {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.addBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--accent);
+  border-radius: 60px;
+  padding: 13px;
+  width: 42px;
+  height: 42px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.addBtn:hover {
+  opacity: 0.9;
+}
+
+.addBtn:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.addBtnIcon {
+  fill: none;
+  stroke: var(--background);
+  stroke-width: 4px;
+}
+.actions p {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.28571;
+  color: var(--main-black);
+}
+@media screen and (min-width: 768px) {
+    .searchFormAndActions{
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}

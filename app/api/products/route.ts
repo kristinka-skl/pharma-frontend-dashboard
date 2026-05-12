@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     const page = Number(request.nextUrl.searchParams.get('page') ?? 1);
 
 
-    const res = await api('/orders', {
+    const res = await api('/products', {
       params: {
         ...(search !== '' && { search }),
         page,

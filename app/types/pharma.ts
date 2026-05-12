@@ -41,3 +41,13 @@ export type TransactionType = 'Income' | 'Expense' | 'Error';
 export type SearchFormData = {
     name: string
 }
+
+export interface Product{
+    _id: string,
+    name: string,    
+    id: string,
+    suppliers: string,
+    price: number,
+    stock: number,
+    category: string,
+}
