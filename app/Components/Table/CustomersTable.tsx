@@ -1,7 +1,6 @@
 import { Customer } from '@/app/types/pharma';
 import {
   Box,
-  Paper,
   Table,
   TableBody,
   TableCell,
@@ -21,7 +20,7 @@ interface BasicTableProps {
 export default function CustomersTable({ dataList }: BasicTableProps) {
   console.log('dataList:', dataList);
   return (
-    <Box className={cssModule.box} sx={{ width: '100%' }}>
+    <Box className={cssModule.box} sx={{ minWidth: { xs: '511px', md: '960px', lg: '1280px' } }}>
       <Typography
         className={cssModule.tableTitle}
         variant="tableTitle"
@@ -30,14 +29,18 @@ export default function CustomersTable({ dataList }: BasicTableProps) {
         Customers Data
       </Typography>
       <TableContainer>
-        <Table sx={{ minWidth: 511, maxWidth: 1280 }} aria-label="simple table">
+        <Table sx={{ minWidth: 670, maxWidth: 1280, 
+          tableLayout: 'fixed' 
+          }} aria-label="customers table">
           <TableHead>
-            <TableRow className={cssModule.tableRow}>
-              <TableCell>User Info</TableCell>
-              <TableCell align="left">Email</TableCell>
-              <TableCell align="left">Address</TableCell>
-              <TableCell align="left">Phone</TableCell>
-              <TableCell align="left">Register date</TableCell>
+            <TableRow className={cssModule.tableRow}
+            sx={{ height: { xs: '42px', md: '58px' } }}
+            >
+              <TableCell sx={{ width: '18%' }}>User Info</TableCell>
+              <TableCell sx={{ width: '25%' }} align="left">Email</TableCell>
+              <TableCell sx={{ width: '20%' }} align="left">Address</TableCell>
+              <TableCell sx={{ width: '22%' }} align="left">Phone</TableCell>
+              <TableCell sx={{ width: '15%' }} align="left">Register date</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -61,8 +64,8 @@ export default function CustomersTable({ dataList }: BasicTableProps) {
                         {row.name}
                       </div>
                     </TableCell>
-                    <TableCell align="left">{row.email}</TableCell>
-                    <TableCell align="left">{row.address}</TableCell>
+                    <TableCell sx={{ wordBreak: { xs: 'break-all', md: 'normal' }, overflowWrap: 'anywhere' }} align="left">{row.email}</TableCell>
+                    <TableCell sx={{ wordBreak: { xs: 'break-all', md: 'normal' }, overflowWrap: 'anywhere' }} align="left">{row.address}</TableCell>
                     <TableCell align="left">{row.phone}</TableCell>
                     <TableCell align="left">{row.register_date}</TableCell>
                   </TableRow>

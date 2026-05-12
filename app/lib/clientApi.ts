@@ -8,7 +8,12 @@
 // } from '../types/book';
 // import { User } from '../types/user';
 import { LoginFormData } from '../types/auth';
-import { Customer, IncomeExpense as IncomeExpense, Order, RecentCustomer as RecentCustomer } from '../types/pharma';
+import {
+  Customer,
+  IncomeExpense as IncomeExpense,
+  Order,
+  RecentCustomer as RecentCustomer,
+} from '../types/pharma';
 import { User } from '../types/user';
 import { nextServer } from './api';
 
@@ -41,19 +46,15 @@ interface FetchOrdersResponse {
 export async function getOrders(
   page: number,
   perPage: number,
-  search?: string,
-
+  search?: string
 ): Promise<FetchOrdersResponse> {
-  const { data } = await nextServer.get<FetchOrdersResponse>(
-    '/orders',
-    {
-      params: {
-        page,
-        perPage,
-        ...(search && { search })    
-      },
-    }
-  );
+  const { data } = await nextServer.get<FetchOrdersResponse>('/orders', {
+    params: {
+      page,
+      perPage,
+      ...(search && { search }),
+    },
+  });
   return data;
 }
 
@@ -65,22 +66,17 @@ interface FetchCustomersResponse {
 }
 
 export async function getCustomers(
-  // page: number,
-  // limit: number,
-  // title?: string,
-  // author?: string
+  page: number,
+  perPage: number,
+  search?: string
 ): Promise<FetchCustomersResponse> {
-  const { data } = await nextServer.get<FetchCustomersResponse>(
-    '/customers',
-    // {
-    //   params: {
-    //     page,
-    //     limit,
-    //     ...(title && { title }),
-    //     ...(author && { author }),
-    //   },
-    // }
-  );
+  const { data } = await nextServer.get<FetchCustomersResponse>('/customers', {
+    params: {
+      page,
+      perPage,
+      ...(search && { search }),
+    },
+  });
   return data;
 }
 
@@ -94,12 +90,10 @@ interface FetchDashboardResponse {
   incomeExpenses: IncomeExpense[];
 }
 
-export async function getDashboard(){
-  const { data } = await nextServer.get<FetchDashboardResponse>(
-    '/dashboard')
-    return data;
+export async function getDashboard() {
+  const { data } = await nextServer.get<FetchDashboardResponse>('/dashboard');
+  return data;
 }
-
 
 // export async function addBookFromRecommended(book_id: string) {
 //   const { data } = await nextServer.post<Book>(`/books/add/${book_id}`);

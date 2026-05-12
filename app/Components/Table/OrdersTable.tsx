@@ -10,7 +10,6 @@ import {
   Typography,
 } from '@mui/material';
 import cssModule from './Table.module.css';
-import Image from 'next/image';
 import AvatarWithFallback from './AvatarWithFallback';
 
 interface BasicTableProps {
@@ -40,7 +39,7 @@ export default function OrdersTable({ dataList }: BasicTableProps) {
           badgeBg: 'rgba(245, 158, 11, 0.1)',
           badgeText: '#f79042',
         };
-        case 'Delivered':
+      case 'Delivered':
         return {
           badgeBg: 'rgba(89, 177, 122, 0.1)',
           badgeText: 'var(--accent)',
@@ -117,25 +116,18 @@ export default function OrdersTable({ dataList }: BasicTableProps) {
                   >
                     <TableCell component="th" scope="row">
                       <div className={cssModule.photoAndName}>
-                        <AvatarWithFallback 
-      src={row.photo} 
-      name={row.name} 
-      className={cssModule.photo} 
-    />
-                        {/* <Image
-                          className={cssModule.photo}
+                        <AvatarWithFallback
                           src={row.photo}
-                          width={24}
-                          height={24}
-                          alt="portrait photo"
-                        /> */}
+                          name={row.name}
+                          className={cssModule.photo}
+                        />
+
                         {row.name}
                       </div>
                     </TableCell>
 
                     <TableCell align="left">{row.address}</TableCell>
                     <TableCell align="left">{row.products}</TableCell>
-
                     <TableCell align="left">{row.order_date}</TableCell>
 
                     <TableCell align="left">
