@@ -1,0 +1,89 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px !important;
+  padding: 0 !important;
+}
+
+.flexContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 14px; 
+  margin-bottom: 32px;
+  padding: 0 !important;
+  border: none !important;
+}
+
+.baseBtn {
+  border-radius: 60px;
+  text-transform: none;
+  font-weight: 500;
+  font-size: 16px;
+  width: 146px; 
+  height: 44px; 
+  padding: 13px 16px;  
+}
+
+.submitBtn {
+  background-color: var(--accent) ;
+  color: #fff ;
+}
+
+.submitBtn:hover {
+  opacity: 0.9 ;
+  background-color: var(--accent) ;   
+}
+
+.cancelBtn {
+  background-color: #F5F5F5 ;
+  color: rgba(29, 30, 33, 0.4) ; 
+}
+
+.cancelBtn:hover {
+  background-color: #E0E0E0;
+  
+}
+.actions {
+  display: flex;
+  gap: 16px;
+}
+
+.closeBtn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.closeBtnIcon {
+  fill: none;
+  stroke: var(--main-black);
+  transition: stroke 0.3s ease;
+}
+
+.modalTitle {
+  font-weight: 600 !important;
+  font-size: 24px !important;
+  font-family: inherit !important;
+  line-height: 1.16667 !important;
+  color: var(--main-black) !important;
+}
+
+@media screen and (min-width: 768px) {
+  .flexContainer {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .flexContainer > div {
+    width: calc(50% - 7px);
+  }
+  .baseBtn {
+    /* Наприклад, width: 160px !important; якщо потрібно */
+  }
+}
+

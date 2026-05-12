@@ -1,6 +1,7 @@
 import LoginForm from '@/app/Components/LoginForm/LoginForm';
 import css from './loginPage.module.css';
 import Image from 'next/image';
+import { Toaster } from 'react-hot-toast';
 
 export default function Login() {
   return (
@@ -26,6 +27,7 @@ export default function Login() {
       </div>
       <LoginForm />
       </div>
+      <Toaster/>
     </section>
   );
 }

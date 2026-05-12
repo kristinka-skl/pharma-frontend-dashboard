@@ -51,3 +51,11 @@ export interface Product{
     stock: number,
     category: string,
 }
+
+export interface ProductFormData {
+  name: string;
+  category: string;
+  stock: number;
+  suppliers: string;
+  price: number;
+}

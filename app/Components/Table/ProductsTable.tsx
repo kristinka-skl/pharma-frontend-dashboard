@@ -11,13 +11,14 @@ import {
 } from '@mui/material';
 // import css from 'styled-jsx/css';
 import cssModule from './Table.module.css';
-import Image from 'next/image';
+
 
 interface BasicTableProps {
   dataList: Product[];
+  onEdit: (product: Product) => void;
 }
 
-export default function ProductsTable({ dataList }: BasicTableProps) {
+export default function ProductsTable({ dataList, onEdit }: BasicTableProps) {
   console.log('dataList:', dataList);
   return (
     <Box className={cssModule.box} sx={{ minWidth: { xs: '511px', md: '960px', lg: '1280px' } }}>
@@ -53,12 +54,12 @@ export default function ProductsTable({ dataList }: BasicTableProps) {
                     key={row._id}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
-                    <TableCell component="th" scope="row">{row.name}</TableCell>
+                    <TableCell component="th" scope="row" sx={{ wordBreak: { xs: 'break-all', md: 'normal' }, overflowWrap: 'anywhere' }}>{row.name}</TableCell>
                     <TableCell align="left">{row.category}</TableCell>
                     <TableCell align="left">{row.stock}</TableCell>
                     <TableCell align="left">{row.suppliers}</TableCell>
                     <TableCell align="left">{row.price}</TableCell>
-                    <TableCell align="left">E D</TableCell>
+                    <TableCell align="left"><button onClick={() => onEdit(row)}>E</button> D</TableCell>
                   </TableRow>
                 );
               })}
