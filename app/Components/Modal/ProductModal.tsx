@@ -199,11 +199,30 @@ export default function ProductModal({
                       slotProps: {
                         paper: {
                           sx: {
+                            height: '140px',
+                            marginTop: '8px',
+                            boxShadow: 'none',
                             bgcolor: COLORS.green,
                             color: 'white',
                             borderRadius: '12px',
                             '& .MuiMenuItem-root:hover': {
                               bgcolor: 'rgba(255, 255, 255, 0.1)',
+                            },
+                            '&::-webkit-scrollbar': {
+                              width: '6px', 
+                            },
+                            '&::-webkit-scrollbar-track': {
+                              backgroundColor: 'transparent',
+                              marginTop: '8px',
+                              marginBottom: '8px',
+                            },
+                            
+                            '&::-webkit-scrollbar-thumb': {
+                              backgroundColor: 'rgba(255, 255, 255, 0.4)',
+                              borderRadius: '10px',
+                            },
+                            '&::-webkit-scrollbar-thumb:hover': {
+                              backgroundColor: 'rgba(255, 255, 255, 0.6)', 
                             },
                           },
                         },
