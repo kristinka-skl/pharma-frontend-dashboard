@@ -1,31 +1,44 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { api } from './app/api/api';
+import { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
 
-const publicRoutes = ['/login', '/register'];
+const publicRoutes = ['/login'];
 
 export async function proxy(request: NextRequest) {
-  const isPublicRoute = publicRoutes.some(route => request.nextUrl.pathname.startsWith(route));
-  const accessToken = await getAccessToken();
-  if (accessToken) {
-    if (!isPublicRoute || !await isValidAccessToken(accessToken)) return NextResponse.next();
-    return NextResponse.redirect(new URL('/recommended', request.url));
-  }
-  if (isPublicRoute) return NextResponse.next();
-  return NextResponse.redirect(new URL('/login', request.url));
-}
-
-async function getAccessToken() {
+  const isPublicRoute = publicRoutes.some((route) =>
+    request.nextUrl.pathname.startsWith(route)
+  );
+  
   const cookieStore = await cookies();
-  return cookieStore.get('accessToken')?.value;
+  const accessToken = cookieStore.get('accessToken');
+  const refreshToken = cookieStore.get('refreshToken'); 
+  
+  if (accessToken) {
+    if (!isPublicRoute || !(await isValidAccessToken(cookieStore)))
+      return NextResponse.next();
+    return NextResponse.redirect(new URL('/dashboard', request.url));
+  }
+
+  if (refreshToken) {
+    return NextResponse.next();
+  }
+
+  if (isPublicRoute) return NextResponse.next(); 
+  return NextResponse.redirect(new URL('/login', request.url)); 
 }
 
-async function isValidAccessToken(accessToken: string) {
+
+async function isValidAccessToken(cookieStore: ReadonlyRequestCookies) {
   try {
-    const res = await api.get('/users/current', {
-      headers: { Authorization: `Bearer ${accessToken}` },
+    const res = await api.get('/user/user-info', {
+      headers: {
+        Cookie: cookieStore.toString(),
+      },
     });
-    return res.data.token !== undefined;
+    if(res)
+      return true;
+    else throw Error;  
   } catch {
     return false;
   }
@@ -33,10 +46,10 @@ async function isValidAccessToken(accessToken: string) {
 
 export const config = {
   matcher: [
-    '/recommended/:path*',
-    '/library/:path*',
-    '/reading/:path*',
-    '/login',
-    '/register',
+    '/products/:path*',
+    '/customers/:path*',
+    '/orders/:path*',
+    '/suppliers/:path*',    
+    '/dashboard',    
   ],
 };

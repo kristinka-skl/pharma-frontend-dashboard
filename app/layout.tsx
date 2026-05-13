@@ -2,12 +2,12 @@ import 'modern-normalize/modern-normalize.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-// import Container from './Components/Shared/Container/Container';
-// import ToasterProvider from './Components/Shared/Toaster/Toaster';
+
 import TanStackProvider from './Components/TanStackProvider/TanStackProvider';
 import Container from './Components/Container/Container';
 
 import MuiThemeProvider from './Components/MuiThemeProvider/ThemeProvider';
+import AuthProvider from './Components/AuthProvider/AuthProvider';
 
 const interSans = Inter({
   variable: '--font-inter-sans',
@@ -47,12 +47,14 @@ export default function RootLayout({
     <html lang="en" className={`${interSans.variable}`}>
       <body>
         <TanStackProvider>
+          <AuthProvider>
           <MuiThemeProvider>
             <Container>
               {children}
               {/* <ToasterProvider /> */}
             </Container>
           </MuiThemeProvider>
+          </AuthProvider>
         </TanStackProvider>
       </body>
     </html>

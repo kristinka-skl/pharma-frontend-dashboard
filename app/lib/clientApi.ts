@@ -29,14 +29,28 @@ export const login = async (data: LoginFormData) => {
   return res.data;
 };
 
-// export const getCurrentUser = async () => {
-//   const res = await nextServer.get<User>('/users/current');
-//   return res.data;
-// };
+export const getMe = async () => {
+  const res = await nextServer.get<User>('/user/user-info');
+  return res.data;
+};
 
 export const logout = async () => {
   const res = await nextServer.get('/user/logout');
   return res.data;
+};
+
+type CheckSessionRequest = {
+  success: boolean;
+};
+
+export const checkSession = async () => {
+  try {
+    const res = await nextServer.post<CheckSessionRequest>('/user/refresh');
+    return res.data.success;
+  } catch (error) {
+    console.error('Check session failed');
+    return false; 
+  }
 };
 
 interface FetchDashboardResponse {

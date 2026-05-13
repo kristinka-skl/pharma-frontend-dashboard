@@ -110,6 +110,13 @@ const theme = createTheme({
         }),
       },
     },
+    MuiTableContainer: {
+      styleOverrides: {
+        root: {
+          overflowX: 'visible', 
+        },
+      },
+    },
   },
 });
 
