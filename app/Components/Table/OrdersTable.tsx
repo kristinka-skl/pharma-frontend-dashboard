@@ -67,7 +67,7 @@ export default function OrdersTable({ dataList }: BasicTableProps) {
   return (
     <Box
       className={cssModule.box}
-      sx={{ width: { xs: '511px', md: '960px', lg: '1280px' } }}
+      sx={{ width: { xs: '700px', md: '960px', lg: '1280px' } }}
     >
       <Typography
         className={cssModule.tableTitle}
@@ -86,20 +86,20 @@ export default function OrdersTable({ dataList }: BasicTableProps) {
               className={cssModule.tableRow}
               sx={{ height: { xs: '42px', md: '58px' } }}
             >
-              <TableCell sx={{ width: '20%' }}>User Info</TableCell>
-              <TableCell sx={{ width: '26%' }} align="left">
+              <TableCell sx={{ width: {xs: '18%', md: '22%'} }}>User Info</TableCell>
+              <TableCell sx={{ width: {xs: '26%', md: '20%'} }} align="left">
                 Address
               </TableCell>
-              <TableCell sx={{ width: '14%' }} align="left">
+              <TableCell sx={{ width: {xs: '12%', md: '15%'} }} align="left">
                 Products
               </TableCell>
-              <TableCell sx={{ width: '15%' }} align="left">
+              <TableCell sx={{ width: {xs: '15%', md: '21%'} }} align="left">
                 Order date
               </TableCell>
-              <TableCell sx={{ width: '11%' }} align="left">
+              <TableCell sx={{ width: {xs: '11%', md: '13%'} }} align="left">
                 Price
               </TableCell>
-              <TableCell sx={{ width: '14%' }} align="left">
+              <TableCell sx={{ width: {xs: '18%', md: '14%'} }} align="left">
                 Status
               </TableCell>
             </TableRow>

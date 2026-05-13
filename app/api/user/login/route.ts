@@ -12,29 +12,30 @@ export async function POST(req: NextRequest) {
     const cookieStore = await cookies();
     const cookieSet = apiRes.headers['set-cookie'];
     console.log('apiRes.headers[set-cookie]:', cookieSet);
-    
- if (cookieSet) {
-	    const cookieArray = Array.isArray(cookieSet) ? cookieSet : [cookieSet];
-	    for (const cookieStr of cookieArray) {
-	      const parsed = parse(cookieStr);
-	      const options = {
-	        expires: parsed.Expires ? new Date(parsed.Expires) : undefined,
-	        path: parsed.Path,
-	        maxAge: Number(parsed['Max-Age']),
-	      };
-	      if (parsed.accessToken) {
-	        cookieStore.set('accessToken', parsed.accessToken, options);
-	      }
-	      if (parsed.refreshToken) {
-	        cookieStore.set('refreshToken', parsed.refreshToken, options);
-	      }
-	    }
-      const cookieStoreA = await cookies();
-      console.log('cookieStoreA:', cookieStoreA)
-	    return NextResponse.json(apiRes.data);
-	  }
-	  return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
+    if (cookieSet) {
+      const cookieArray = Array.isArray(cookieSet) ? cookieSet : [cookieSet];
+      for (const cookieStr of cookieArray) {
+        const parsed = parse(cookieStr);
+        const options = {
+          expires: parsed.Expires ? new Date(parsed.Expires) : undefined,
+          path: parsed.Path,
+          maxAge: Number(parsed['Max-Age']),
+        };
+        if (parsed.accessToken) {
+          cookieStore.set('accessToken', parsed.accessToken, options);
+        }
+        if (parsed.refreshToken) {
+          cookieStore.set('refreshToken', parsed.refreshToken, options);
+        }
+        if (parsed.sessionId) {
+          cookieStore.set('sessionId', parsed.sessionId, options);
+        }
+      }
+
+      return NextResponse.json(apiRes.data);
+    }
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   } catch (error: unknown) {
     if (isAxiosError(error)) {
       console.error(
@@ -59,4 +60,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-
