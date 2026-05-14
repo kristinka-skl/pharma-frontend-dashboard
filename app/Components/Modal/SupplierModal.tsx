@@ -11,32 +11,29 @@ import {
   TextField,
   MenuItem,
   Typography,
+  TextFieldProps,
 } from '@mui/material';
 
 import css from './ProductModal.module.css';
-import { Product, ProductFormData } from '@/app/types/pharma';
+import { Supplier, SupplierFormData } from '@/app/types/pharma';
 
-interface ProductModalProps {
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout';
+import dayjs from 'dayjs';
+
+interface SupplierModalProps {
   isOpen: boolean;
   onClose: () => void;
-  initialData?: Product | null;
-  onSubmit: (data: ProductFormData) => Promise<Product> | void;
+  initialData?: Supplier | null;
+  onSubmit: (data: SupplierFormData) => Promise<Supplier> | void;
   isSubmittingData: boolean;
 }
 
-const CATEGORIES = [
-  'Medicine',
-  'Head',
-  'Hand',
-  'Dental Care',
-  'Skin Care',
-  'Eye Care',
-  'Vitamins & Supplements',
-  'Orthopedic Products',
-  'Baby Care',
-];
-const MAX_PRICE = 10000000;
-const MAX_STOCK = 1000000;
+const STATUS = ['Active', 'Deactive'];
+
+const MAX_AMOUNT = 1000000;
 const MAX_STRING = 1000;
 
 const schema = yup.object({
@@ -44,23 +41,22 @@ const schema = yup.object({
     .string()
     .max(MAX_STRING, 'Max 1000 characters')
     .required('Required'),
-  category: yup.string().required('Required').oneOf(CATEGORIES, 'Required'),
-  stock: yup
+  status: yup.string().required('Required').oneOf(STATUS, 'Required'),
+  amount: yup
     .number()
     .typeError('Must be a number')
     .min(0, 'Min 0')
-    .max(MAX_STOCK, `Max stock is ${MAX_STOCK}`)
+    .max(MAX_AMOUNT, `Max amount is ${MAX_AMOUNT}`)
     .required('Required'),
   suppliers: yup
     .string()
     .max(MAX_STRING, 'Max 1000 characters')
     .required('Required'),
-  price: yup
-    .number()
-    .typeError('Must be a number')
-    .positive('Must be > 0')
-    .max(MAX_PRICE, `Max price is ${MAX_PRICE}`)
+  address: yup
+    .string()
+    .max(MAX_STRING, 'Max 1000 characters')
     .required('Required'),
+  date: yup.string().required('Required'),
 });
 
 const COLORS = {
@@ -92,6 +88,26 @@ const getInputSx = (isDirty: boolean, hasError: boolean) => ({
       borderColor: hasError ? COLORS.error : COLORS.green,
     },
   },
+  '& .MuiPickersOutlinedInput-root': {
+    borderRadius: '60px',
+    backgroundColor: '#fff',
+    fontSize: '12px',
+    height: '44px',
+    '& fieldset': {
+      borderColor: hasError
+        ? COLORS.error
+        : isDirty
+          ? COLORS.green
+          : COLORS.borderDefault,
+      transition: 'border-color 0.3s ease',
+    },
+    '&:hover fieldset': {
+      borderColor: hasError ? COLORS.error : COLORS.green,
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: `${hasError ? COLORS.error : COLORS.green} !important`,
+    },
+  },
   '& .MuiOutlinedInput-input': {
     padding: '13px 18px',
   },
@@ -107,13 +123,13 @@ const getInputSx = (isDirty: boolean, hasError: boolean) => ({
   },
 });
 
-export default function ProductModal({
+export default function SupplierModal({
   isOpen,
   onClose,
   initialData,
   onSubmit,
   isSubmittingData,
-}: ProductModalProps) {
+}: SupplierModalProps) {
   const isEditMode = Boolean(initialData);
 
   const {
@@ -121,7 +137,7 @@ export default function ProductModal({
     handleSubmit,
     reset,
     formState: { isSubmitting },
-  } = useForm<ProductFormData>({
+  } = useForm<SupplierFormData>({
     resolver: yupResolver(schema),
     mode: 'onChange',
   });
@@ -131,10 +147,11 @@ export default function ProductModal({
       reset(
         initialData || {
           name: '',
-          category: '',
-          stock: 0,
+          address: '',
+          amount: 0,
           suppliers: '',
-          price: 0,
+          date: '',
+          status: 'Active',
         }
       );
     }
@@ -144,7 +161,7 @@ export default function ProductModal({
     <Dialog
       open={isOpen}
       onClose={onClose}
-      maxWidth={false}      
+      maxWidth={false}
       slotProps={{
         paper: {
           sx: {
@@ -160,7 +177,7 @@ export default function ProductModal({
     >
       <DialogTitle className={css.header}>
         <Typography className={css.modalTitle}>
-          {isEditMode ? 'Edit product' : 'Add a new product'}
+          {isEditMode ? 'Edit supplier' : 'Add a new supplier'}
         </Typography>
         <button className={css.closeBtn} onClick={onClose} type="button">
           <svg className={css.closeBtnIcon} width="32" height="32">
@@ -175,14 +192,17 @@ export default function ProductModal({
           onClose();
         })}
       >
-        <DialogContent className={css.flexContainer}>
+        <DialogContent
+          className={css.flexContainer}
+          sx={{ p: 0, overflow: 'visible' }}
+        >
           <Controller
             name="name"
             control={control}
             render={({ field, fieldState }) => (
               <TextField
                 {...field}
-                placeholder="Product Info"
+                placeholder="Suppliers Info"
                 fullWidth
                 sx={getInputSx(fieldState.isDirty, !!fieldState.error)}
                 error={!!fieldState.error}
@@ -192,90 +212,13 @@ export default function ProductModal({
           />
 
           <Controller
-            name="category"
+            name="address"
             control={control}
             render={({ field, fieldState }) => (
               <TextField
                 {...field}
-                select
+                placeholder="Address"
                 fullWidth
-                sx={getInputSx(fieldState.isDirty, !!fieldState.error)}
-                error={!!fieldState.error}
-                helperText={fieldState.error?.message}
-                slotProps={{
-                  select: {
-                    displayEmpty: true,
-                    renderValue: (value: unknown) =>
-                      (value as string) || (
-                        <Typography
-                          sx={{ color: COLORS.textSecondary, fontSize: '12px' }}
-                        >
-                          Category
-                        </Typography>
-                      ),
-                    MenuProps: {
-                      slotProps: {
-                        paper: {
-                          sx: {
-                            height: '140px',
-                            marginTop: '8px',
-                            boxShadow: 'none',
-                            bgcolor: COLORS.green,
-                            color: 'white',
-                            borderRadius: '12px',
-                            '& .MuiMenuItem-root:hover': {
-                              bgcolor: 'rgba(255, 255, 255, 0.1)',
-                            },
-                            '&::-webkit-scrollbar': {
-                              width: '6px',
-                            },
-                            '&::-webkit-scrollbar-track': {
-                              backgroundColor: 'transparent',
-                              marginTop: '8px',
-                              marginBottom: '8px',
-                            },
-
-                            '&::-webkit-scrollbar-thumb': {
-                              backgroundColor: 'rgba(255, 255, 255, 0.4)',
-                              borderRadius: '10px',
-                            },
-                            '&::-webkit-scrollbar-thumb:hover': {
-                              backgroundColor: 'rgba(255, 255, 255, 0.6)',
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                }}
-              >
-                <MenuItem value="" disabled>
-                  Category
-                </MenuItem>
-                {CATEGORIES.map((cat) => (
-                  <MenuItem key={cat} value={cat}>
-                    {cat}
-                  </MenuItem>
-                ))}
-              </TextField>
-            )}
-          />
-
-          <Controller
-            name="stock"
-            control={control}
-            render={({ field, fieldState }) => (
-              <TextField
-                {...field}
-                type="number"
-                placeholder="Stock"
-                fullWidth
-                slotProps={{
-                  htmlInput: {
-                    max: MAX_STOCK,
-                    maxLength: 8,
-                  },
-                }}
                 sx={getInputSx(fieldState.isDirty, !!fieldState.error)}
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
@@ -289,7 +232,7 @@ export default function ProductModal({
             render={({ field, fieldState }) => (
               <TextField
                 {...field}
-                placeholder="Suppliers"
+                placeholder="Company"
                 fullWidth
                 sx={getInputSx(fieldState.isDirty, !!fieldState.error)}
                 error={!!fieldState.error}
@@ -299,24 +242,145 @@ export default function ProductModal({
           />
 
           <Controller
-            name="price"
+            name="date"
+            control={control}
+            render={({ field, fieldState }) => (
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  {...field}
+                  value={field.value ? dayjs(field.value) : null}
+                  onChange={(newValue) => {
+                    field.onChange(
+                      newValue ? newValue.format('MMMM D, YYYY') : ''
+                    );
+                  }}
+                  format="MMMM D, YYYY"
+                  slots={{
+                    openPickerIcon: () => (
+                      <svg
+                        width={18}
+                        height={18}
+                        fill="none"
+                        stroke="var(--accent)"
+                      >
+                        <use href="/sprite.svg#icon-calendar"></use>
+                      </svg>
+                    ),
+                  }}
+                  slotProps={{
+                    textField: {
+                      fullWidth: true,
+                      error: !!fieldState.error,
+                      helperText: fieldState.error?.message,
+                      sx: getInputSx(fieldState.isDirty, !!fieldState.error),
+                    },
+                  }}
+                />
+              </LocalizationProvider>
+            )}
+          />
+
+          <Controller
+            name="amount"
             control={control}
             render={({ field, fieldState }) => (
               <TextField
                 {...field}
                 type="number"
-                placeholder="Price"
+                placeholder="Amount"
                 fullWidth
                 slotProps={{
-                  htmlInput: {
-                    max: MAX_PRICE,
-                    maxLength: 8,
-                  },
+                  htmlInput: { max: MAX_AMOUNT, maxLength: 8 },
                 }}
                 sx={getInputSx(fieldState.isDirty, !!fieldState.error)}
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
               />
+            )}
+          />
+
+          <Controller
+            name="status"
+            control={control}
+            render={({ field, fieldState }) => (
+              <TextField
+                {...field}
+                select
+                fullWidth
+                sx={getInputSx(fieldState.isDirty, !!fieldState.error)}
+                error={!!fieldState.error}
+                helperText={fieldState.error?.message}
+                slotProps={{
+                  select: {
+                    displayEmpty: true,
+
+                    renderValue: (value: unknown) =>
+                      (value as string) || (
+                        <Typography
+                          sx={{ color: COLORS.textSecondary, fontSize: '12px' }}
+                        >
+                          Category
+                        </Typography>
+                      ),
+
+                    MenuProps: {
+                      slotProps: {
+                        paper: {
+                          sx: {
+                            height: '140px',
+
+                            marginTop: '8px',
+
+                            boxShadow: 'none',
+
+                            bgcolor: COLORS.green,
+
+                            color: 'white',
+
+                            borderRadius: '12px',
+
+                            '& .MuiMenuItem-root:hover': {
+                              bgcolor: 'rgba(255, 255, 255, 0.1)',
+                            },
+
+                            '&::-webkit-scrollbar': {
+                              width: '6px',
+                            },
+
+                            '&::-webkit-scrollbar-track': {
+                              backgroundColor: 'transparent',
+
+                              marginTop: '8px',
+
+                              marginBottom: '8px',
+                            },
+
+                            '&::-webkit-scrollbar-thumb': {
+                              backgroundColor: 'rgba(255, 255, 255, 0.4)',
+
+                              borderRadius: '10px',
+                            },
+
+                            '&::-webkit-scrollbar-thumb:hover': {
+                              backgroundColor: 'rgba(255, 255, 255, 0.6)',
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                }}
+              >
+                <MenuItem value="" disabled>
+                  Status
+                </MenuItem>
+
+                {STATUS.map((item) => (
+                  <MenuItem key={item} value={item}>
+                    {item}
+                  </MenuItem>
+                ))}
+              </TextField>
             )}
           />
         </DialogContent>
