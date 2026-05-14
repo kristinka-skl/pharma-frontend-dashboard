@@ -7,11 +7,12 @@
 }
 
 .flexContainer {
-  display: flex;
-  flex-direction: column;
+display: grid;
+  grid-template-columns: 1fr; 
   gap: 14px; 
-  margin-bottom: 32px;
-  padding: 0 !important;
+  padding-bottom: 24px !important;
+
+
   border: none !important;
 }
 
@@ -74,16 +75,12 @@
 }
 
 @media screen and (min-width: 768px) {
-  .flexContainer {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
 
-  .flexContainer > div {
-    width: calc(50% - 7px);
-  }
-  .baseBtn {
-    /* Наприклад, width: 160px !important; якщо потрібно */
+@media (min-width: 768px) {
+  .flexContainer {
+    grid-template-columns: 1fr 1fr;
+    row-gap: 18px;
+    column-gap: 14px;
   }
 }
-
+}

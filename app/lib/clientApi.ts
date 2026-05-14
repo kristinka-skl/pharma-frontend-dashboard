@@ -15,6 +15,8 @@ import {
   Product,
   ProductFormData,
   RecentCustomer as RecentCustomer,
+  Supplier,
+  SupplierFormData,
 } from '../types/pharma';
 import { User } from '../types/user';
 import { nextServer } from './api';
@@ -111,6 +113,7 @@ export async function getCustomers(
   });
   return data;
 }
+
 interface FetchProductsResponse {
   products: Product[];
   totalPages: number;
@@ -132,12 +135,6 @@ export async function getProducts(
   return data;
 }
 
-
-// export async function addBookFromRecommended(book_id: string) {
-//   const { data } = await nextServer.post<Book>(`/books/add/${book_id}`);
-//   return data;
-// }
-
 export async function addProduct(newProduct: ProductFormData): Promise<Product> {
   const { data } = await nextServer.post<Product>('/products', newProduct);
   return data;
@@ -154,34 +151,33 @@ export async function deleteProduct(product_id: string) {
   return data;
 }
 
+interface FetchSuppliersResponse {
+  suppliers: Supplier[];
+  totalPages: number;
+  page: number;
+  perPage: number;
+}
+export async function getSuppliers(
+  page: number,
+  perPage: number,
+  search?: string
+): Promise<FetchSuppliersResponse> {
+  const { data } = await nextServer.get<FetchSuppliersResponse>('/suppliers', {
+    params: {
+      page,
+      perPage,
+      ...(search && { search }),
+    },
+  });
+  return data;
+}
+export async function addSupplier(newSupplier: SupplierFormData): Promise<Supplier> {
+  const { data } = await nextServer.post<Supplier>('/suppliers', newSupplier);
+  return data;
+}
 
-// export async function getBookDetails(id: string): Promise<OwnBook> {
-//   const { data } = await nextServer.get<OwnBook>(`/books/${id}`);
-//   return data;
-// }
+export async function updateSupplier(supplier_id: string, formData: SupplierFormData){
+  const { data } = await nextServer.put<Supplier>(`suppliers/${supplier_id}`, formData);
+  return data;
+}
 
-// export async function startReading(body: ReadingRequest): Promise<OwnBook> {
-//   const { data } = await nextServer.post<OwnBook>(`/books/reading/start`, body);
-//   return data;
-// }
-
-// export async function finishReading(body: ReadingRequest): Promise<OwnBook> {
-//   const { data } = await nextServer.post<OwnBook>(
-//     `/books/reading/finish`,
-//     body
-//   );
-//   return data;
-// }
-
-// export async function deleteReadingSession({
-//   readingId,
-//   bookId,
-// }: deleteReadingSessionRequest): Promise<OwnBook> {
-//   const { data } = await nextServer.delete<OwnBook>(`/books/reading`, {
-//     params: {
-//       readingId,
-//       bookId,
-//     },
-//   });
-//   return data;
-// }
