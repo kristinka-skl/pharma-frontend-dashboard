@@ -4,14 +4,19 @@ import css from './dashboardPage.module.css';
 import { getDashboard } from '@/app/lib/clientApi';
 import RecentCustomersTable from '@/app/Components/Table/RecentCustomersTable';
 import IncomeExpensesTable from '@/app/Components/Table/IncomeExpensesTable';
+import { Loader } from '@/app/Components/Loader/Loader';
 
 export default function DashboardPageClient() {
-  const { data, isError, isSuccess } = useQuery({
+  const { data, isError, isSuccess, isLoading } = useQuery({
     queryKey: ['dashboard'],
     queryFn: () => getDashboard(),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
   });
+
+ if (isLoading) {
+    return <Loader />;
+  }
 
   console.log('dashboard:', data);
   return (

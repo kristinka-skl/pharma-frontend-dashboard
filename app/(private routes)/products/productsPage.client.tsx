@@ -17,6 +17,7 @@ import DotsPagination from '@/app/Components/Pagination/DotsPagination';
 import ProductsTable from '@/app/Components/Table/ProductsTable';
 import { Product, ProductFormData } from '@/app/types/pharma';
 import ProductModal from '@/app/Components/Modal/ProductModal';
+import { Loader } from '@/app/Components/Loader/Loader';
 
 export default function ProductsPageClient() {
   const searchParams = useSearchParams();
@@ -30,7 +31,7 @@ export default function ProductsPageClient() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-  const { data, isError, isSuccess, isLoading } = useQuery({
+  const { data, isError, isSuccess, isLoading, isFetching } = useQuery({
     queryKey: ['products', search, page],
     queryFn: () => getProducts(page, perPage, search),
     placeholderData: keepPreviousData,
@@ -112,16 +113,15 @@ export default function ProductsPageClient() {
     router.push(`${pathname}?${params.toString()}`);
   };
 
-  if (isLoading) {
-    return 
-     // <Loader />;
+ if (isLoading) {
+    return <Loader />;
   }
 
   return (
     <section className={css.products}>
       <h1 className={css.visuallyHidden}>Products page</h1>
       <div className={css.searchFormAndActions}>
-        <SearchForm placeholder="Product Name" />
+        <SearchForm placeholder="Product Name" isFiltering={isFetching}/>
         <div className={css.actions}>
           <button className={css.addBtn} onClick={handleOpenAddModal}>
             <svg className={css.addBtnIcon} width={18} height={18}>

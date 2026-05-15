@@ -10,6 +10,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import css from './customersPage.module.css'
 import SearchForm from '@/app/Components/SearchForm/SearchForm';
 import DotsPagination from '@/app/Components/Pagination/DotsPagination';
+import { Loader } from '@/app/Components/Loader/Loader';
 
 export default function CustomersPageClient() {
   const searchParams = useSearchParams();
@@ -19,7 +20,7 @@ export default function CustomersPageClient() {
     const search = searchParams.get('search') || undefined;
     const page = Number(searchParams.get('page')) || 1;
 
-  const { data, isError, isSuccess } = useQuery({
+  const { data, isError, isSuccess, isLoading, isFetching } = useQuery({
     queryKey: ['customers', search, page],
     queryFn: () => getCustomers(page, perPage, search),
     placeholderData: keepPreviousData,
@@ -40,12 +41,14 @@ export default function CustomersPageClient() {
     params.set('page', newPage.toString());    
     router.push(`${pathname}?${params.toString()}`);
   };
-
+ if (isLoading) {
+    return <Loader />;
+  }
   console.log('customers:', data);
   return (
     <section className={css.customersSection}>
       <h1 className={css.visuallyHidden}>Customers page</h1>
-      <SearchForm placeholder="User Name" />
+      <SearchForm placeholder="User Name" isFiltering={isFetching}/>
       {isSuccess && 
           <CustomersTable dataList={data.customers} />
         }

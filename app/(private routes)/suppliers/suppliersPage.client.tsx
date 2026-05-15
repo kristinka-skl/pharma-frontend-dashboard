@@ -19,6 +19,7 @@ import { Supplier, SupplierFormData } from '@/app/types/pharma';
 import SuppliersTable from '@/app/Components/Table/SuppliersTable';
 import SupplierModal from '@/app/Components/Modal/SupplierModal';
 import { useSupplierDraftStore } from '@/app/store/supplierDraftStore';
+import { Loader } from '@/app/Components/Loader/Loader';
 
 
 export default function SuppliersPageClient() {
@@ -33,7 +34,7 @@ const { draft, setDraft, clearDraft } = useSupplierDraftStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
 
-  const { data, isError, isSuccess, isLoading } = useQuery({
+  const { data, isError, isSuccess, isLoading, isFetching } = useQuery({
     queryKey: ['suppliers', search, page],
     queryFn: () => getSuppliers(page, perPage, search),
     placeholderData: keepPreviousData,
@@ -103,15 +104,14 @@ const { draft, setDraft, clearDraft } = useSupplierDraftStore();
   };
 
   if (isLoading) {
-    return 
-     // <Loader />;
+    return <Loader />;
   }
 
   return (
     <section className={css.suppliers}>
       <h1 className={css.visuallyHidden}>Suppliers page</h1>
       <div className={css.searchFormAndActions}>
-        <SearchForm placeholder="User Name" />
+        <SearchForm placeholder="User Name" isFiltering={isFetching} />
         <div className={css.actions}>
           <button className={css.addBtn} onClick={handleOpenAddModal}>
             <svg className={css.addBtnIcon} width={18} height={18}>
@@ -122,7 +122,7 @@ const { draft, setDraft, clearDraft } = useSupplierDraftStore();
         </div>
       </div>
       
-      {isSuccess && (
+      {isLoading ? <Loader /> : isSuccess && (
         <SuppliersTable
           dataList={data.suppliers}
           onEdit={(supplier: Supplier) => {

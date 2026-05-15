@@ -10,14 +10,14 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 interface SearchFormProps {
   placeholder: string;
-  
+  isFiltering?: boolean;
 }
 
 const schema = yup.object({
   name: yup.string().trim().default('')
 });
 
-export default function SearchForm({placeholder}: SearchFormProps) {
+export default function SearchForm({placeholder, isFiltering}: SearchFormProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -70,17 +70,18 @@ export default function SearchForm({placeholder}: SearchFormProps) {
             className={css.input}
             {...register('name')}
             placeholder={placeholder}
+            disabled={isFiltering}
           />
         </div>
         {errors.name && <p className={css.error}>{errors.name.message}</p>}
       </div>
 
       <div className={css.actions}>
-        <button type="submit" className={css.submitBtn} disabled={isSubmitting}>
+        <button type="submit" className={css.submitBtn} disabled={isSubmitting || isFiltering}>
           <svg className={css.filterIcon}>
             <use href="/sprite.svg#icon-filter"></use>
           </svg>
-          {isSubmitting ? 'Filtering...' : 'Filter'}
+          {isFiltering ? 'Filtering...' : 'Filter'}
         </button>
       </div>
     </form>

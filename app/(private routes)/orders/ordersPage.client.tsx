@@ -10,6 +10,7 @@ import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import DotsPagination from '@/app/Components/Pagination/DotsPagination';
 import { perPage } from '@/app/_utils/utils';
+import { Loader } from '@/app/Components/Loader/Loader';
 
 export default function OrdersPageClient() {
   const searchParams = useSearchParams();
@@ -19,7 +20,7 @@ export default function OrdersPageClient() {
   const search = searchParams.get('search') || undefined;
   const page = Number(searchParams.get('page')) || 1;
 
-  const { data, isError, isSuccess } = useQuery({
+  const { data, isError, isSuccess, isLoading, isFetching } = useQuery({
     
     queryKey: ['orders', search, page], 
     
@@ -42,10 +43,14 @@ export default function OrdersPageClient() {
     router.push(`${pathname}?${params.toString()}`);
   };
 
+ if (isLoading) {
+    return <Loader />;
+  }
+
   return (
     <section className={css.ordersSection}>
       <h1 className={css.visuallyHidden}>Orders page</h1>
-      <SearchForm placeholder="User Name" />
+      <SearchForm placeholder="User Name" isFiltering={isFetching}/>
 
       {isSuccess && <OrdersTable dataList={data.orders} />}
       
