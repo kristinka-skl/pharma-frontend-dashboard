@@ -22,6 +22,27 @@ export default function SuppliersTable({
   dataList,
   onEdit,  
 }: BasicTableProps) {
+
+const getStatusStyles = (status: string) => {
+    switch (status) {
+      case 'Active':
+        return {
+          badgeBg: 'rgba(89, 177, 122, 0.1)',
+          badgeText: 'var(--accent)',
+        };
+      case 'Deactive':
+        return {
+          badgeBg: 'rgba(232, 80, 80, 0.1)',
+          badgeText: 'var(--accent-2)',
+        };
+      default:
+        return {
+          badgeBg: 'transparent',
+          badgeText: 'inherit',
+        };
+    }
+  };
+
   console.log('dataList:', dataList);
   return (
     <Box
@@ -69,6 +90,7 @@ export default function SuppliersTable({
           <TableBody>
             {dataList &&
               dataList.map((row) => {
+                const styles = getStatusStyles(row.status);
                 return (
                   <TableRow
                     key={row._id}
@@ -88,11 +110,29 @@ export default function SuppliersTable({
                     <TableCell align="left">{row.suppliers}</TableCell>
                     <TableCell align="left">{row.date}</TableCell>
                     <TableCell align="left">{row.amount}</TableCell>
-                    <TableCell align="left">{row.status}</TableCell>
+                    <TableCell align="left"><Box
+                        sx={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          padding: '4px 12px',
+                          borderRadius: '40px',
+                          backgroundColor: styles.badgeBg,
+                          color: styles.badgeText,
+                          fontWeight: 500,
+                          fontSize: '14px',
+                          width: '92px',
+                          minWidth: '80px',
+                          height: '25px',
+                          boxSizing: 'border-box',
+                        }}
+                      >
+                        {row.status}
+                      </Box></TableCell>
                     <TableCell align="left">
                       <div className={cssModule.actions}>
                         <button
-                          className={`${cssModule.actionBtn} ${cssModule.updBtn}`}
+                          className={`${cssModule.actionBtn} ${cssModule.updBtn} ${cssModule.updBtnWithText}`}
                           onClick={() => onEdit(row)}
                         >
                           <svg
@@ -102,6 +142,7 @@ export default function SuppliersTable({
                           >
                             <use href="./sprite.svg#icon-edit"></use>
                           </svg>
+                          <p>Edit</p>
                         </button>
                         
                       </div>

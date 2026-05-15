@@ -15,6 +15,8 @@ import {
 
 import css from './ProductModal.module.css';
 import { Product, ProductFormData } from '@/app/types/pharma';
+import { useProductDraftStore } from '@/app/store/productDraftStore';
+import { CATEGORIES, MAX_PRICE, MAX_STOCK, MAX_STRING, productSchema } from '@/app/_utils/validations';
 
 interface ProductModalProps {
   isOpen: boolean;
@@ -24,44 +26,6 @@ interface ProductModalProps {
   isSubmittingData: boolean;
 }
 
-const CATEGORIES = [
-  'Medicine',
-  'Head',
-  'Hand',
-  'Dental Care',
-  'Skin Care',
-  'Eye Care',
-  'Vitamins & Supplements',
-  'Orthopedic Products',
-  'Baby Care',
-];
-const MAX_PRICE = 10000000;
-const MAX_STOCK = 1000000;
-const MAX_STRING = 1000;
-
-const schema = yup.object({
-  name: yup
-    .string()
-    .max(MAX_STRING, 'Max 1000 characters')
-    .required('Required'),
-  category: yup.string().required('Required').oneOf(CATEGORIES, 'Required'),
-  stock: yup
-    .number()
-    .typeError('Must be a number')
-    .min(0, 'Min 0')
-    .max(MAX_STOCK, `Max stock is ${MAX_STOCK}`)
-    .required('Required'),
-  suppliers: yup
-    .string()
-    .max(MAX_STRING, 'Max 1000 characters')
-    .required('Required'),
-  price: yup
-    .number()
-    .typeError('Must be a number')
-    .positive('Must be > 0')
-    .max(MAX_PRICE, `Max price is ${MAX_PRICE}`)
-    .required('Required'),
-});
 
 const COLORS = {
   green: 'var(--accent)',
@@ -116,35 +80,53 @@ export default function ProductModal({
 }: ProductModalProps) {
   const isEditMode = Boolean(initialData);
 
+  const setDraft = useProductDraftStore((state) => state.setDraft);
+  const clearDraft = useProductDraftStore((state) => state.clearDraft);
+
   const {
     control,
     handleSubmit,
     reset,
+    watch,
     formState: { isSubmitting },
   } = useForm<ProductFormData>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(productSchema),
     mode: 'onChange',
+    defaultValues: {
+      name: '',
+      category: '',
+      stock: 0,
+      suppliers: '',
+      price: 0,
+    },
   });
 
   useEffect(() => {
     if (isOpen) {
-      reset(
-        initialData || {
-          name: '',
-          category: '',
-          stock: 0,
-          suppliers: '',
-          price: 0,
-        }
-      );
+      if (isEditMode && initialData) {
+        reset(initialData);
+      } else {
+        const savedDraft = useProductDraftStore.getState().draft;
+        reset(savedDraft);
+      }
     }
-  }, [isOpen, initialData, reset]);
+  }, [isOpen, initialData, isEditMode, reset]);
+
+  useEffect(() => {
+    const subscription = watch((value) => {
+      if (!isEditMode) {
+        setDraft(value as ProductFormData);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [watch, isEditMode, setDraft]);
 
   return (
     <Dialog
       open={isOpen}
       onClose={onClose}
-      maxWidth={false}      
+      maxWidth={false}
       slotProps={{
         paper: {
           sx: {
@@ -172,6 +154,11 @@ export default function ProductModal({
       <form
         onSubmit={handleSubmit(async (data) => {
           await onSubmit(data);
+
+          if (!isEditMode) {
+            clearDraft();
+          }
+
           onClose();
         })}
       >
@@ -184,6 +171,11 @@ export default function ProductModal({
                 {...field}
                 placeholder="Product Info"
                 fullWidth
+                slotProps={{
+                  htmlInput: {
+                    maxLength: MAX_STRING,
+                  },
+                }}
                 sx={getInputSx(fieldState.isDirty, !!fieldState.error)}
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
@@ -291,6 +283,11 @@ export default function ProductModal({
                 {...field}
                 placeholder="Suppliers"
                 fullWidth
+                slotProps={{
+                  htmlInput: {
+                    maxLength: MAX_STRING,
+                  },
+                }}
                 sx={getInputSx(fieldState.isDirty, !!fieldState.error)}
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}

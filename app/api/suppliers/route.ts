@@ -3,7 +3,11 @@ import { api } from '../api';
 import { cookies } from 'next/headers';
 import { isAxiosError } from 'axios';
 import { perPage } from '@/app/_utils/utils';
-// import { logErrorResponse } from '../_utils/utils';
+import { ValidationError } from 'yup';
+
+import { logErrorResponse } from '@/app/_utils/logger'; 
+import { supplierSchema } from '@/app/_utils/validations';
+
 
 export async function GET(request: NextRequest) {
   try {
@@ -28,16 +32,17 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(res.data, { status: res.status });
   } catch (error) {
     if (isAxiosError(error)) {
-    //   logErrorResponse(error.response?.data);
+      logErrorResponse(error.response?.data);
       return NextResponse.json(
         { error: error.message, response: error.response?.data },
         { status: error.status }
       );
     }
-    // logErrorResponse({ message: (error as Error).message });
+    logErrorResponse({ message: (error as Error).message });
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
+
 
 
 
@@ -51,28 +56,48 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const body = await request.json();
+    const rawBody = await request.json();
 
-    const res = await api.post('/suppliers', body, {
+    let cleanData;
+    try {
+      cleanData = await supplierSchema.validate(rawBody, {
+        stripUnknown: true,
+        abortEarly: false,
+      });
+    } catch (error: unknown) {
+      if (error instanceof ValidationError) {        
+        logErrorResponse(error.errors, 'POST /api/suppliers - Validation Failed');
+        
+        return NextResponse.json(
+          { error: 'Validation failed', details: error.errors },
+          { status: 400 }
+        );
+      }
+      return NextResponse.json({ error: 'Invalid request data' }, { status: 400 });
+    }
+
+    const res = await api.post('/suppliers', cleanData, {
       headers: {
         Cookie: cookieStore.toString(),
       },
     });
 
     return NextResponse.json(res.data, { status: res.status });
-  } catch (error) {
+  } catch (error: unknown) {
     if (isAxiosError(error)) {
-      //   logErrorResponse(error.response?.data);
+      logErrorResponse(error.response?.data || error.message, 'POST /api/suppliers - Axios Error');
+      
       return NextResponse.json(
         { error: error.message, response: error.response?.data },
-        { status: error.status }
+        { status: error.status ?? 500 }
       );
     }
-    // logErrorResponse({ message: (error as Error).message });
+    
+    logErrorResponse(error, 'POST /api/suppliers - Internal Error');
+    
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }
     );
   }
 }
-
