@@ -16,7 +16,7 @@ export const api = axios.create({
     : 'http://localhost:3000/api',
   withCredentials: true,
 });
-
+console.log('API Base URL:', process.env.NEXT_PUBLIC_API_URL);
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
