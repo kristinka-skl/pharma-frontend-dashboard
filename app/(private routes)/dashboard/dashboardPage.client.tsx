@@ -7,7 +7,7 @@ import IncomeExpensesTable from '@/app/Components/Table/IncomeExpensesTable';
 import { Loader } from '@/app/Components/Loader/Loader';
 
 export default function DashboardPageClient() {
-  const { data, isError, isSuccess, isLoading } = useQuery({
+  const { data, isError, error, refetch, isSuccess, isLoading } = useQuery({
     queryKey: ['dashboard'],
     queryFn: () => getDashboard(),
     placeholderData: keepPreviousData,
@@ -17,11 +17,19 @@ export default function DashboardPageClient() {
  if (isLoading) {
     return <Loader />;
   }
-
-  console.log('dashboard:', data);
   return (
     <section className={css.dashboardSection}>
       <h1 className={css.visuallyHidden}>Dashboard</h1>
+      {isError && (
+        <div className={css.errorContainer}>
+          <p className={css.errorMessage}>
+            Oops! Failed to load dashboard data. {error instanceof Error ? error.message : ''}
+          </p>
+          <button onClick={() => refetch()} className={css.retryBtn}>
+            Try again
+          </button>
+        </div>
+      )}
       {isSuccess && (
         <>
           <div className={css.stats}>

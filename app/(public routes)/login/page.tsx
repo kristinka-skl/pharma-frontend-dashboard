@@ -26,7 +26,7 @@ export default function Login() {
         </p>
       </div>
       <LoginForm />
-      </div>
+      </div>      
       <Toaster/>
     </section>
   );

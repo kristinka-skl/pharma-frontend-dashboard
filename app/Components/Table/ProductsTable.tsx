@@ -23,7 +23,6 @@ export default function ProductsTable({
   onEdit,
   onDelete,
 }: BasicTableProps) {
-  console.log('dataList:', dataList);
   return (
     <Box
       className={cssModule.box}

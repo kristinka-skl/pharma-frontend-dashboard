@@ -3,45 +3,56 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 80vh;
+  min-height: 100vh; 
   text-align: center;
   padding: 0 20px;
+  background-color: var(--background-2); 
+  font-family: var(--font-family);
 }
 
 .title {
-  font-size: 48px;
+  font-size: 64px; 
   font-weight: 700;
   line-height: 1.1;
-  color: var(--foreground);
-  margin-bottom: 24px;
+  color: var(--main-black); 
+  margin-bottom: 16px;
   letter-spacing: -0.02em;
+}
+
+h2.title {
+  font-size: 40px;
 }
 
 .text {
   font-size: 16px;
   font-weight: 500;
-  line-height: 1.33;
-  color: var(--text-accent);
+  line-height: 1.5; 
+  color: rgba(29, 30, 33, 0.6); 
   margin-bottom: 32px;
-  max-width: 400px;
+  max-width: 420px;
 }
 
 .button {
   display: inline-block;
-  padding: 16px 48px;
-  background-color: var(--foreground);
-  color: var(--input-background);
-  font-weight: 700;
-  font-size: 14px;
+  padding: 14px 40px;
+  background-color: var(--accent); 
+  color: #ffffff; 
+  font-weight: 600;
+  font-size: 15px;
   line-height: 1.28;
-  letter-spacing: 0.02em;
-  border-radius: 30px;
+  letter-spacing: 0.01em;
+  border-radius: 60px; 
   border: none;
   text-decoration: none;
   cursor: pointer;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease, transform 0.1s ease; 
 }
 
 .button:hover {
-  opacity: 0.8;
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+.button:active {
+  transform: translateY(0); 
 }

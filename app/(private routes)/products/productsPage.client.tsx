@@ -1,7 +1,12 @@
 'use client';
 
 import { getErrorMessage, perPage } from '@/app/_utils/utils';
-import { deleteProduct, getProducts, addProduct, updateProduct } from '@/app/lib/clientApi'; 
+import {
+  deleteProduct,
+  getProducts,
+  addProduct,
+  updateProduct,
+} from '@/app/lib/clientApi';
 import {
   keepPreviousData,
   useMutation,
@@ -24,19 +29,20 @@ export default function ProductsPageClient() {
   const router = useRouter();
   const pathname = usePathname();
   const queryClient = useQueryClient();
-  
+
   const search = searchParams.get('search') || undefined;
   const page = Number(searchParams.get('page')) || 1;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-  const { data, isError, isSuccess, isLoading, isFetching } = useQuery({
-    queryKey: ['products', search, page],
-    queryFn: () => getProducts(page, perPage, search),
-    placeholderData: keepPreviousData,
-    refetchOnMount: false,
-  });
+  const { data, isError, error, refetch, isSuccess, isLoading, isFetching } =
+    useQuery({
+      queryKey: ['products', search, page],
+      queryFn: () => getProducts(page, perPage, search),
+      placeholderData: keepPreviousData,
+      refetchOnMount: false,
+    });
 
   const { mutate: mutateDelete } = useMutation({
     mutationFn: async (id: string) => await deleteProduct(id),
@@ -50,12 +56,17 @@ export default function ProductsPageClient() {
   });
 
   const { mutate: mutateUpdate, isPending: isUpdating } = useMutation({
-    mutationFn: async ({ id, formData }: { id: string; formData: ProductFormData }) => 
-      await updateProduct(id, formData),
+    mutationFn: async ({
+      id,
+      formData,
+    }: {
+      id: string;
+      formData: ProductFormData;
+    }) => await updateProduct(id, formData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
       toast.success('Product updated successfully!');
-      setIsModalOpen(false); 
+      setIsModalOpen(false);
     },
     onError: (error) => {
       const message = getErrorMessage(error);
@@ -64,7 +75,8 @@ export default function ProductsPageClient() {
   });
 
   const { mutate: mutateAdd, isPending: isAdding } = useMutation({
-    mutationFn: async (newProduct: ProductFormData) => await addProduct(newProduct),
+    mutationFn: async (newProduct: ProductFormData) =>
+      await addProduct(newProduct),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
       toast.success('Product added successfully!');
@@ -81,21 +93,21 @@ export default function ProductsPageClient() {
   };
 
   const handleDeleteProduct = (id: string) => {
-    mutateDelete(id); 
+    mutateDelete(id);
   };
 
   const handleSubmitProduct = (formData: ProductFormData) => {
     const cleanData = {
       name: formData.name,
       category: formData.category,
-      stock: Number(formData.stock), 
+      stock: Number(formData.stock),
       suppliers: formData.suppliers,
       price: Number(formData.price),
     };
     if (selectedProduct) {
-      mutateUpdate({ id: selectedProduct._id, formData: cleanData }); 
+      mutateUpdate({ id: selectedProduct._id, formData: cleanData });
     } else {
-      mutateAdd(cleanData); 
+      mutateAdd(cleanData);
     }
   };
 
@@ -113,7 +125,7 @@ export default function ProductsPageClient() {
     router.push(`${pathname}?${params.toString()}`);
   };
 
- if (isLoading) {
+  if (isLoading) {
     return <Loader />;
   }
 
@@ -121,7 +133,7 @@ export default function ProductsPageClient() {
     <section className={css.products}>
       <h1 className={css.visuallyHidden}>Products page</h1>
       <div className={css.searchFormAndActions}>
-        <SearchForm placeholder="Product Name" isFiltering={isFetching}/>
+        <SearchForm placeholder="Product Name" isFiltering={isFetching} />
         <div className={css.actions}>
           <button className={css.addBtn} onClick={handleOpenAddModal}>
             <svg className={css.addBtnIcon} width={18} height={18}>
@@ -131,8 +143,20 @@ export default function ProductsPageClient() {
           <p>Add a new product</p>
         </div>
       </div>
-      
-      {isSuccess && (
+
+      {isError && (
+        <div className={css.errorContainer}>
+          <p className={css.errorMessage}>
+            Oops! Failed to load products.{' '}
+            {error instanceof Error ? error.message : ''}
+          </p>
+          <button onClick={() => refetch()} className={css.retryBtn}>
+            Try again
+          </button>
+        </div>
+      )}
+
+      {isSuccess && !isError && (
         <ProductsTable
           onDelete={handleDeleteProduct}
           dataList={data.products}
@@ -142,8 +166,8 @@ export default function ProductsPageClient() {
           }}
         />
       )}
-      
-      {totalPagesFromBackend > 1 && (
+
+      {isSuccess && !isError && totalPagesFromBackend > 1 && (
         <DotsPagination
           totalPages={totalPagesFromBackend}
           currentPage={page}
@@ -151,13 +175,12 @@ export default function ProductsPageClient() {
         />
       )}
 
-      
       <ProductModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         initialData={selectedProduct}
         onSubmit={handleSubmitProduct}
-        isSubmittingData={isAdding || isUpdating} 
+        isSubmittingData={isAdding || isUpdating}
       />
       <Toaster />
     </section>
