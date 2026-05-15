@@ -18,6 +18,7 @@ import DotsPagination from '@/app/Components/Pagination/DotsPagination';
 import { Supplier, SupplierFormData } from '@/app/types/pharma';
 import SuppliersTable from '@/app/Components/Table/SuppliersTable';
 import SupplierModal from '@/app/Components/Modal/SupplierModal';
+import { useSupplierDraftStore } from '@/app/store/supplierDraftStore';
 
 
 export default function SuppliersPageClient() {
@@ -28,7 +29,7 @@ export default function SuppliersPageClient() {
   
   const search = searchParams.get('search') || undefined;
   const page = Number(searchParams.get('page')) || 1;
-
+const { draft, setDraft, clearDraft } = useSupplierDraftStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
 
@@ -59,6 +60,7 @@ export default function SuppliersPageClient() {
       queryClient.invalidateQueries({ queryKey: ['suppliers'] });
       toast.success('Supplier added successfully!');
       setIsModalOpen(false);
+      clearDraft();
     },
     onError: (error) => {
       const message = getErrorMessage(error);

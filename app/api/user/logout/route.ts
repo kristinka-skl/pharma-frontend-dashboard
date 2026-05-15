@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { isAxiosError } from 'axios';
 import { cookies } from 'next/headers';
 import { api } from '../../api';
+import { logErrorResponse } from '@/app/_utils/logger'; 
 
 export async function GET() {
   const cookieStore = await cookies();
@@ -19,23 +20,33 @@ export async function GET() {
         }
       );
     }
+    
     cookieStore.delete('accessToken');
     cookieStore.delete('refreshToken');
+    cookieStore.delete('sessionId'); 
 
     return NextResponse.json({ message: 'Signed out successfully' });
   } catch (error: unknown) {
     cookieStore.delete('accessToken');
     cookieStore.delete('refreshToken');
+    cookieStore.delete('sessionId'); 
 
     if (isAxiosError(error)) {
+      logErrorResponse(
+        error.response?.data || error.message,
+        'GET /api/user/logout - Axios Error'
+      );
+
       const errorMessage =
         error.response?.data?.message ??
         error.response?.data?.error ??
         error.message;
       const statusCode = error.response?.status || 500;
+      
       return NextResponse.json({ error: errorMessage }, { status: statusCode });
     }
-    console.error('Unknown error:', error);
+    
+    logErrorResponse(error, 'GET /api/user/logout - Internal Error');
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }

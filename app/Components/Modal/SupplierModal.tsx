@@ -11,17 +11,16 @@ import {
   TextField,
   MenuItem,
   Typography,
-  TextFieldProps,
 } from '@mui/material';
 
 import css from './ProductModal.module.css';
 import { Supplier, SupplierFormData } from '@/app/types/pharma';
-
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout';
 import dayjs from 'dayjs';
+import { useSupplierDraftStore } from '@/app/store/supplierDraftStore';
+import { MAX_AMOUNT, MAX_STRING, STATUS, supplierSchema } from '@/app/_utils/validations';
 
 interface SupplierModalProps {
   isOpen: boolean;
@@ -31,33 +30,7 @@ interface SupplierModalProps {
   isSubmittingData: boolean;
 }
 
-const STATUS = ['Active', 'Deactive'];
 
-const MAX_AMOUNT = 1000000;
-const MAX_STRING = 1000;
-
-const schema = yup.object({
-  name: yup
-    .string()
-    .max(MAX_STRING, 'Max 1000 characters')
-    .required('Required'),
-  status: yup.string().required('Required').oneOf(STATUS, 'Required'),
-  amount: yup
-    .number()
-    .typeError('Must be a number')
-    .min(0, 'Min 0')
-    .max(MAX_AMOUNT, `Max amount is ${MAX_AMOUNT}`)
-    .required('Required'),
-  suppliers: yup
-    .string()
-    .max(MAX_STRING, 'Max 1000 characters')
-    .required('Required'),
-  address: yup
-    .string()
-    .max(MAX_STRING, 'Max 1000 characters')
-    .required('Required'),
-  date: yup.string().required('Required'),
-});
 
 const COLORS = {
   green: 'var(--accent)',
@@ -131,31 +104,47 @@ export default function SupplierModal({
   isSubmittingData,
 }: SupplierModalProps) {
   const isEditMode = Boolean(initialData);
-
+  const setDraft = useSupplierDraftStore((state) => state.setDraft);
+const clearDraft = useSupplierDraftStore((state) => state.clearDraft);
   const {
     control,
     handleSubmit,
     reset,
+    watch,
     formState: { isSubmitting },
   } = useForm<SupplierFormData>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(supplierSchema),
     mode: 'onChange',
+    defaultValues: {
+      name: '',
+      address: '',
+      amount: 0,
+      suppliers: '',
+      date: '',
+      status: 'Active',
+    },
   });
 
   useEffect(() => {
     if (isOpen) {
-      reset(
-        initialData || {
-          name: '',
-          address: '',
-          amount: 0,
-          suppliers: '',
-          date: '',
-          status: 'Active',
-        }
-      );
+      if (isEditMode && initialData) {
+        reset(initialData);
+      } else {
+        const savedDraft = useSupplierDraftStore.getState().draft;
+        reset(savedDraft);
+      }
     }
-  }, [isOpen, initialData, reset]);
+  }, [isOpen, initialData, isEditMode, reset]);
+
+  useEffect(() => {
+    const subscription = watch((value) => {
+      if (!isEditMode) {
+        setDraft(value as SupplierFormData);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [watch, isEditMode, setDraft]);
 
   return (
     <Dialog
@@ -189,6 +178,9 @@ export default function SupplierModal({
       <form
         onSubmit={handleSubmit(async (data) => {
           await onSubmit(data);
+          if (!isEditMode) {
+            clearDraft();
+          }
           onClose();
         })}
       >
@@ -204,6 +196,11 @@ export default function SupplierModal({
                 {...field}
                 placeholder="Suppliers Info"
                 fullWidth
+                slotProps={{
+                  htmlInput: {
+                    maxLength: MAX_STRING,
+                  },
+                }}
                 sx={getInputSx(fieldState.isDirty, !!fieldState.error)}
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
@@ -219,6 +216,11 @@ export default function SupplierModal({
                 {...field}
                 placeholder="Address"
                 fullWidth
+                slotProps={{
+                  htmlInput: {
+                    maxLength: MAX_STRING,
+                  },
+                }}
                 sx={getInputSx(fieldState.isDirty, !!fieldState.error)}
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
@@ -234,6 +236,11 @@ export default function SupplierModal({
                 {...field}
                 placeholder="Company"
                 fullWidth
+                slotProps={{
+                  htmlInput: {
+                    maxLength: MAX_STRING,
+                  },
+                }}
                 sx={getInputSx(fieldState.isDirty, !!fieldState.error)}
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
