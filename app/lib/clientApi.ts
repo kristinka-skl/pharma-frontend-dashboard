@@ -13,11 +13,6 @@ import {
 import { User } from '../types/user';
 import { nextServer } from './api';
 
-// export const register = async (data: RegisterFormData) => {
-//   const res = await nextServer.post<User>('/user/signup', data);
-//   return res.data;
-// };
-
 export const login = async (data: LoginFormData) => {
   const res = await nextServer.post<User>('/user/login', data);
   return res.data;

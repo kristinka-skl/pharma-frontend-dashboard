@@ -16,7 +16,7 @@ export const logErrorResponse = (errorData: unknown, routeContext?: string) => {
     try {
       const stringifiedData = JSON.stringify(errorData, null, 2);
       console.error(`${contextPrefix}Payload:\n${stringifiedData}`);
-    } catch (stringifyError) {
+    } catch {
       console.error(`${contextPrefix}Unserializable object received.`);
     }
   } else if (typeof errorData === 'string') {

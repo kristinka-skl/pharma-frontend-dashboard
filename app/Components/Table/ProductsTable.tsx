@@ -1,4 +1,4 @@
-import { Customer, Product } from '@/app/types/pharma';
+import { Product } from '@/app/types/pharma';
 import {
   Box,
   Table,
