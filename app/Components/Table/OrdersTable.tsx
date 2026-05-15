@@ -62,7 +62,6 @@ export default function OrdersTable({ dataList }: BasicTableProps) {
     }
   };
 
-  console.log('dataList:', dataList);
 
   return (
     <Box

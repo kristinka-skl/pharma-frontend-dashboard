@@ -1,3 +1,4 @@
+import AuthProvider from '../Components/AuthProvider/AuthProvider';
 import Header from '../Components/Header/Header';
 import Sidebar from '../Components/Sidebar/Sidebar';
 
@@ -10,13 +11,15 @@ export default function PrivateLayout({
 }) {
   return (
     <div className={css.appWrapper}>
-      <Header />
-      <div className={css.mainContainer}>
-        <Sidebar />
-        <div className={css.contentWrapper}>
-          <main className={css.mainContent}>{children}</main>
+      <AuthProvider>
+        <Header />
+        <div className={css.mainContainer}>
+          <Sidebar />
+          <div className={css.contentWrapper}>
+            <main className={css.mainContent}>{children}</main>
+          </div>
         </div>
-      </div>
+      </AuthProvider>
     </div>
   );
 }

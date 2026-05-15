@@ -18,9 +18,9 @@ interface BasicTableProps {
 }
 
 export default function CustomersTable({ dataList }: BasicTableProps) {
-  console.log('dataList:', dataList);
+  
   return (
-    <Box className={cssModule.box} sx={{ minWidth: { xs: '511px', md: '960px', lg: '1280px' } }}>
+    <Box className={cssModule.box} sx={{ minWidth: { xs: '670px', md: '960px', lg: '1280px' } }}>
       <Typography
         className={cssModule.tableTitle}
         variant="tableTitle"

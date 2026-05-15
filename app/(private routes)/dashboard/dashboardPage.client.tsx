@@ -4,19 +4,32 @@ import css from './dashboardPage.module.css';
 import { getDashboard } from '@/app/lib/clientApi';
 import RecentCustomersTable from '@/app/Components/Table/RecentCustomersTable';
 import IncomeExpensesTable from '@/app/Components/Table/IncomeExpensesTable';
+import { Loader } from '@/app/Components/Loader/Loader';
 
 export default function DashboardPageClient() {
-  const { data, isError, isSuccess } = useQuery({
+  const { data, isError, error, refetch, isSuccess, isLoading } = useQuery({
     queryKey: ['dashboard'],
     queryFn: () => getDashboard(),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
   });
 
-  console.log('dashboard:', data);
+ if (isLoading) {
+    return <Loader />;
+  }
   return (
     <section className={css.dashboardSection}>
       <h1 className={css.visuallyHidden}>Dashboard</h1>
+      {isError && (
+        <div className={css.errorContainer}>
+          <p className={css.errorMessage}>
+            Oops! Failed to load dashboard data. {error instanceof Error ? error.message : ''}
+          </p>
+          <button onClick={() => refetch()} className={css.retryBtn}>
+            Try again
+          </button>
+        </div>
+      )}
       {isSuccess && (
         <>
           <div className={css.stats}>

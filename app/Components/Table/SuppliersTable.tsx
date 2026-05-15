@@ -43,11 +43,10 @@ const getStatusStyles = (status: string) => {
     }
   };
 
-  console.log('dataList:', dataList);
   return (
     <Box
       className={cssModule.box}
-      sx={{ minWidth: { xs: '511px', md: '960px', lg: '1280px' } }}
+      sx={{ minWidth: { xs: '800px', md: '960px', lg: '1280px' } }}
     >
       <Typography
         className={cssModule.tableTitle}
@@ -66,23 +65,23 @@ const getStatusStyles = (status: string) => {
               className={cssModule.tableRow}
               sx={{ height: { xs: '42px', md: '58px' } }}
             >
-              <TableCell sx={{ width: '22%' }}>Supplier Info</TableCell>
-              <TableCell sx={{ width: '20%' }} align="left">
+              <TableCell sx={{ width: {xs: '15%', md: '17%'} }}>Supplier Info</TableCell>
+              <TableCell sx={{ width: {xs: '17%', md: '15%'} }} align="left">
                 Address
               </TableCell>
-              <TableCell sx={{ width: '16%' }} align="left">
+              <TableCell sx={{ width: {xs: '12%', md: '12%'} }} align="left">
                 Company
               </TableCell>
-              <TableCell sx={{ width: '21%' }} align="left">
+              <TableCell sx={{ width: {xs: '15%', md: '18%'} }} align="left">
                 Delivery date
               </TableCell>
-              <TableCell sx={{ width: '13%' }} align="left">
+              <TableCell sx={{ width: {xs: '11%', md: '11%'} }} align="left">
                 Amount
               </TableCell>
-              <TableCell sx={{ width: '13%' }} align="left">
+              <TableCell sx={{ width: {xs: '15%', md: '13%'} }} align="left">
                 Status
               </TableCell>
-              <TableCell sx={{ width: '13%' }} align="left">
+              <TableCell sx={{ width: {xs: '15%', md: '14%'} }} align="left">
                 Action
               </TableCell>
             </TableRow>

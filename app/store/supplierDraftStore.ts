@@ -13,7 +13,7 @@ const initialDraft: SupplierFormData = {
   suppliers: '',
   date: '',
   amount: 0,
-  status: 'Active',
+  status: '',
 };
 export const useSupplierDraftStore = create<SupplierDraftStore>()(
   persist(

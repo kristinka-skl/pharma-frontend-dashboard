@@ -3,6 +3,9 @@
   max-width: 375px;
   margin: 0 auto;
   height: 100vh;
+  background-image: url('/images/lines-deco.png');
+  background-position: bottom -150px right -200px;
+  background-repeat: no-repeat;
 }
 .loginIconWrapper {
   display: flex;
@@ -44,6 +47,7 @@
   .loginSection {
     padding: 24px 32px;
     max-width: 768px;
+    background-position: bottom -110px right -170px;
   }
   .heroTextWrapper {
   max-width: 614px;  

@@ -1,12 +1,4 @@
-// import { LoginFormData, RegisterFormData } from '../types/auth';
-// import {
-//   Book,
-//   BookFormData,
-//   deleteReadingSessionRequest,
-//   OwnBook,
-//   ReadingRequest,
-// } from '../types/book';
-// import { User } from '../types/user';
+
 import { LoginFormData } from '../types/auth';
 import {
   Customer,
@@ -20,11 +12,6 @@ import {
 } from '../types/pharma';
 import { User } from '../types/user';
 import { nextServer } from './api';
-
-// export const register = async (data: RegisterFormData) => {
-//   const res = await nextServer.post<User>('/users/signup', data);
-//   return res.data;
-// };
 
 export const login = async (data: LoginFormData) => {
   const res = await nextServer.post<User>('/user/login', data);

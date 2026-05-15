@@ -17,7 +17,7 @@ interface BasicTableProps {
 }
 
 export default function RecentCustomersTable({ dataList }: BasicTableProps) {
-  console.log('dataList:', dataList);
+  
   return (
     <Box className={cssModule.box} sx={{ width: '100%', height: '100%' }}>
       <Typography

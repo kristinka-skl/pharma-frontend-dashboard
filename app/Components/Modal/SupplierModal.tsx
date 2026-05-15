@@ -18,9 +18,15 @@ import { Supplier, SupplierFormData } from '@/app/types/pharma';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import dayjs from 'dayjs';
 import { useSupplierDraftStore } from '@/app/store/supplierDraftStore';
-import { MAX_AMOUNT, MAX_STRING, STATUS, supplierSchema } from '@/app/_utils/validations';
+import {
+  MAX_AMOUNT,
+  MAX_STRING,
+  STATUS,
+  supplierSchema,
+} from '@/app/_utils/validations';
 
 interface SupplierModalProps {
   isOpen: boolean;
@@ -30,14 +36,12 @@ interface SupplierModalProps {
   isSubmittingData: boolean;
 }
 
-
-
 const COLORS = {
   green: 'var(--accent)',
   error: 'var(--accent-2)',
   lightGray: '#F5F5F5',
   borderDefault: 'rgba(29, 30, 33, 0.1)',
-  textSecondary: 'var(--text)',
+  textSecondary: 'rgba(29, 30, 33, 0.4)',
 };
 
 const getInputSx = (isDirty: boolean, hasError: boolean) => ({
@@ -105,7 +109,7 @@ export default function SupplierModal({
 }: SupplierModalProps) {
   const isEditMode = Boolean(initialData);
   const setDraft = useSupplierDraftStore((state) => state.setDraft);
-const clearDraft = useSupplierDraftStore((state) => state.clearDraft);
+  const clearDraft = useSupplierDraftStore((state) => state.clearDraft);
   const {
     control,
     handleSubmit,
@@ -121,7 +125,7 @@ const clearDraft = useSupplierDraftStore((state) => state.clearDraft);
       amount: 0,
       suppliers: '',
       date: '',
-      status: 'Active',
+      status: '',
     },
   });
 
@@ -253,7 +257,7 @@ const clearDraft = useSupplierDraftStore((state) => state.clearDraft);
             control={control}
             render={({ field, fieldState }) => (
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
+                <DesktopDatePicker
                   {...field}
                   value={field.value ? dayjs(field.value) : null}
                   onChange={(newValue) => {
@@ -281,6 +285,28 @@ const clearDraft = useSupplierDraftStore((state) => state.clearDraft);
                       helperText: fieldState.error?.message,
                       sx: getInputSx(fieldState.isDirty, !!fieldState.error),
                     },
+                    popper: {
+                      placement: 'bottom',
+                      sx: {
+                        zIndex: 1400,
+                      },
+                    },
+                    desktopPaper: {
+                      sx: {                        
+                        borderRadius: '12px',
+                        border: `1px solid ${COLORS.borderDefault}`,
+                        boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
+                        '& .MuiPickersDay-root.Mui-selected': {
+                          backgroundColor: COLORS.green,
+                          '&:hover': {
+                            backgroundColor: COLORS.green,
+                          },
+                        },
+                        '& .MuiPickersDay-today': {
+                          borderColor: COLORS.green,
+                        },
+                      },
+                    },
                   }}
                 />
               </LocalizationProvider>
@@ -293,6 +319,11 @@ const clearDraft = useSupplierDraftStore((state) => state.clearDraft);
             render={({ field, fieldState }) => (
               <TextField
                 {...field}
+                value={field.value === 0 ? '' : field.value}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  field.onChange(val === '' ? '' : Number(val));
+                }}
                 type="number"
                 placeholder="Amount"
                 fullWidth
@@ -326,7 +357,7 @@ const clearDraft = useSupplierDraftStore((state) => state.clearDraft);
                         <Typography
                           sx={{ color: COLORS.textSecondary, fontSize: '12px' }}
                         >
-                          Category
+                          Status
                         </Typography>
                       ),
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { getErrorMessage, perPage } from '@/app/_utils/utils';
-import { getSuppliers, updateSupplier, addSupplier } from '@/app/lib/clientApi'; 
+import { getSuppliers, updateSupplier, addSupplier } from '@/app/lib/clientApi';
 import {
   keepPreviousData,
   useMutation,
@@ -19,34 +19,42 @@ import { Supplier, SupplierFormData } from '@/app/types/pharma';
 import SuppliersTable from '@/app/Components/Table/SuppliersTable';
 import SupplierModal from '@/app/Components/Modal/SupplierModal';
 import { useSupplierDraftStore } from '@/app/store/supplierDraftStore';
-
+import { Loader } from '@/app/Components/Loader/Loader';
 
 export default function SuppliersPageClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
   const queryClient = useQueryClient();
-  
+
   const search = searchParams.get('search') || undefined;
   const page = Number(searchParams.get('page')) || 1;
-const { draft, setDraft, clearDraft } = useSupplierDraftStore();
+  const { clearDraft } = useSupplierDraftStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
+  const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(
+    null
+  );
 
-  const { data, isError, isSuccess, isLoading } = useQuery({
-    queryKey: ['suppliers', search, page],
-    queryFn: () => getSuppliers(page, perPage, search),
-    placeholderData: keepPreviousData,
-    refetchOnMount: false,
-  });
+  const { data, isError, error, refetch, isSuccess, isLoading, isFetching } =
+    useQuery({
+      queryKey: ['suppliers', search, page],
+      queryFn: () => getSuppliers(page, perPage, search),
+      placeholderData: keepPreviousData,
+      refetchOnMount: false,
+    });
 
   const { mutate: mutateUpdate, isPending: isUpdating } = useMutation({
-    mutationFn: async ({ id, formData }: { id: string; formData: SupplierFormData }) => 
-      await updateSupplier(id, formData),
+    mutationFn: async ({
+      id,
+      formData,
+    }: {
+      id: string;
+      formData: SupplierFormData;
+    }) => await updateSupplier(id, formData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['suppliers'] });
       toast.success('Supplier updated successfully!');
-      setIsModalOpen(false); 
+      setIsModalOpen(false);
     },
     onError: (error) => {
       const message = getErrorMessage(error);
@@ -55,7 +63,8 @@ const { draft, setDraft, clearDraft } = useSupplierDraftStore();
   });
 
   const { mutate: mutateAdd, isPending: isAdding } = useMutation({
-    mutationFn: async (newSupplier: SupplierFormData) => await addSupplier(newSupplier),
+    mutationFn: async (newSupplier: SupplierFormData) =>
+      await addSupplier(newSupplier),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['suppliers'] });
       toast.success('Supplier added successfully!');
@@ -76,15 +85,15 @@ const { draft, setDraft, clearDraft } = useSupplierDraftStore();
     const cleanData = {
       name: formData.name,
       address: formData.address,
-      amount: Number(formData.amount), 
+      amount: Number(formData.amount),
       suppliers: formData.suppliers,
       date: formData.date,
-      status: formData.status
+      status: formData.status,
     };
     if (selectedSupplier) {
-      mutateUpdate({ id: selectedSupplier._id, formData: cleanData }); 
+      mutateUpdate({ id: selectedSupplier._id, formData: cleanData });
     } else {
-      mutateAdd(cleanData); 
+      mutateAdd(cleanData);
     }
   };
 
@@ -103,15 +112,14 @@ const { draft, setDraft, clearDraft } = useSupplierDraftStore();
   };
 
   if (isLoading) {
-    return 
-     // <Loader />;
+    return <Loader />;
   }
 
   return (
     <section className={css.suppliers}>
       <h1 className={css.visuallyHidden}>Suppliers page</h1>
       <div className={css.searchFormAndActions}>
-        <SearchForm placeholder="User Name" />
+        <SearchForm placeholder="User Name" isFiltering={isFetching} />
         <div className={css.actions}>
           <button className={css.addBtn} onClick={handleOpenAddModal}>
             <svg className={css.addBtnIcon} width={18} height={18}>
@@ -121,8 +129,20 @@ const { draft, setDraft, clearDraft } = useSupplierDraftStore();
           <p>Add a new supplier</p>
         </div>
       </div>
-      
-      {isSuccess && (
+
+      {isError && (
+        <div className={css.errorContainer}>
+          <p className={css.errorMessage}>
+            Oops! Failed to load suppliers.{' '}
+            {error instanceof Error ? error.message : ''}
+          </p>
+          <button onClick={() => refetch()} className={css.retryBtn}>
+            Try again
+          </button>
+        </div>
+      )}
+
+      {isSuccess && !isError && (
         <SuppliersTable
           dataList={data.suppliers}
           onEdit={(supplier: Supplier) => {
@@ -131,8 +151,8 @@ const { draft, setDraft, clearDraft } = useSupplierDraftStore();
           }}
         />
       )}
-      
-      {totalPagesFromBackend > 1 && (
+
+      {isSuccess && !isError && totalPagesFromBackend > 1 && (
         <DotsPagination
           totalPages={totalPagesFromBackend}
           currentPage={page}
@@ -140,13 +160,12 @@ const { draft, setDraft, clearDraft } = useSupplierDraftStore();
         />
       )}
 
-      
       <SupplierModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         initialData={selectedSupplier}
         onSubmit={handleSubmitSupplier}
-        isSubmittingData={isAdding || isUpdating} 
+        isSubmittingData={isAdding || isUpdating}
       />
       <Toaster />
     </section>
