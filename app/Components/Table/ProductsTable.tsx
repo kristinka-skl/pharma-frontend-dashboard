@@ -27,7 +27,7 @@ export default function ProductsTable({
   return (
     <Box
       className={cssModule.box}
-      sx={{ minWidth: { xs: '511px', md: '960px', lg: '1280px' } }}
+      sx={{ minWidth: { xs: '690px', md: '960px', lg: '1280px' } }}
     >
       <Typography
         className={cssModule.tableTitle}
@@ -46,20 +46,20 @@ export default function ProductsTable({
               className={cssModule.tableRow}
               sx={{ height: { xs: '42px', md: '58px' } }}
             >
-              <TableCell sx={{ width: '22%' }}>Product Info</TableCell>
-              <TableCell sx={{ width: '20%' }} align="left">
+              <TableCell sx={{ width: {xs: '20%', md: '22%'} }}>Product Info</TableCell>
+              <TableCell sx={{ width: {xs: '18%', md: '14%'} }} align="left">
                 Category
               </TableCell>
-              <TableCell sx={{ width: '16%' }} align="left">
+              <TableCell sx={{ width: {xs: '13%', md: '14%'} }} align="left">
                 Stock
               </TableCell>
-              <TableCell sx={{ width: '21%' }} align="left">
+              <TableCell sx={{ width: {xs: '18%', md: '22%'} }} align="left">
                 Supplier
               </TableCell>
-              <TableCell sx={{ width: '13%' }} align="left">
+              <TableCell sx={{ width: {xs: '14%', md: '13%'} }} align="left">
                 Price
               </TableCell>
-              <TableCell sx={{ width: '13%' }} align="left">
+              <TableCell sx={{ width: {xs: '17%', md: '15%'} }} align="left">
                 Action
               </TableCell>
             </TableRow>
