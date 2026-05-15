@@ -11,7 +11,9 @@ export type ApiError = AxiosError<{
 }>;
 
 export const api = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: process.env.NEXT_PUBLIC_API_URL
+    ? `${process.env.NEXT_PUBLIC_API_URL}/api`
+    : 'http://localhost:3000/api',
   withCredentials: true,
 });
 
@@ -21,24 +23,24 @@ api.interceptors.response.use(
     const originalRequest = error.config;
 
     if (
-      error.response?.status !== 401 || 
-      originalRequest.url === '/user/refresh' || 
+      error.response?.status !== 401 ||
+      originalRequest.url === '/user/refresh' ||
       originalRequest._isRetry
     ) {
       return Promise.reject(error);
     }
 
     originalRequest._isRetry = true;
-    
+
     const isRefreshed = await refreshServerSession();
-    
+
     if (!isRefreshed) {
       return Promise.reject(error);
     }
 
     const cookieStore = await cookies();
     originalRequest.headers.Cookie = cookieStore.toString();
-    
+
     return api(originalRequest);
   }
 );
@@ -51,15 +53,19 @@ async function refreshServerSession() {
 
     if (!refreshToken || !sessionId) return false;
 
-    const res = await api.post('/user/refresh', { sessionId, refreshToken }, {
-      headers: { Cookie: cookieStore.toString() },
-    });
+    const res = await api.post(
+      '/user/refresh',
+      { sessionId, refreshToken },
+      {
+        headers: { Cookie: cookieStore.toString() },
+      }
+    );
 
     const setCookie = res.headers['set-cookie'];
-    
+
     if (setCookie) {
       const cookieArray = Array.isArray(setCookie) ? setCookie : [setCookie];
-      
+
       for (const cookieStr of cookieArray) {
         const parsed = parse(cookieStr);
         const maxAgeStr = parsed['Max-Age'] || parsed['max-age'];
@@ -71,9 +77,12 @@ async function refreshServerSession() {
           ...(maxAge !== undefined && !isNaN(maxAge) && { maxAge }),
         };
 
-        if (parsed.accessToken) cookieStore.set('accessToken', parsed.accessToken, options);
-        if (parsed.refreshToken) cookieStore.set('refreshToken', parsed.refreshToken, options);
-        if (parsed.sessionId) cookieStore.set('sessionId', parsed.sessionId, options);
+        if (parsed.accessToken)
+          cookieStore.set('accessToken', parsed.accessToken, options);
+        if (parsed.refreshToken)
+          cookieStore.set('refreshToken', parsed.refreshToken, options);
+        if (parsed.sessionId)
+          cookieStore.set('sessionId', parsed.sessionId, options);
       }
       return true;
     }
