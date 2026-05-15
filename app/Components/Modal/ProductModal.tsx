@@ -16,7 +16,13 @@ import {
 import css from './ProductModal.module.css';
 import { Product, ProductFormData } from '@/app/types/pharma';
 import { useProductDraftStore } from '@/app/store/productDraftStore';
-import { CATEGORIES, MAX_PRICE, MAX_STOCK, MAX_STRING, productSchema } from '@/app/_utils/validations';
+import {
+  CATEGORIES,
+  MAX_PRICE,
+  MAX_STOCK,
+  MAX_STRING,
+  productSchema,
+} from '@/app/_utils/validations';
 
 interface ProductModalProps {
   isOpen: boolean;
@@ -26,13 +32,12 @@ interface ProductModalProps {
   isSubmittingData: boolean;
 }
 
-
 const COLORS = {
   green: 'var(--accent)',
   error: 'var(--accent-2)',
   lightGray: '#F5F5F5',
   borderDefault: 'rgba(29, 30, 33, 0.1)',
-  textSecondary: 'var(--text)',
+  textSecondary: 'rgba(29, 30, 33, 0.4)',
 };
 
 const getInputSx = (isDirty: boolean, hasError: boolean) => ({
@@ -145,7 +150,7 @@ export default function ProductModal({
           {isEditMode ? 'Edit product' : 'Add a new product'}
         </Typography>
         <button className={css.closeBtn} onClick={onClose} type="button">
-          <svg className={css.closeBtnIcon} width="32" height="32">
+          <svg className={css.closeBtnIcon} width="26" height="26">
             <use href="/sprite.svg#icon-close"></use>
           </svg>
         </button>
@@ -162,7 +167,7 @@ export default function ProductModal({
           onClose();
         })}
       >
-        <DialogContent className={css.flexContainer}>
+        <DialogContent className={css.flexContainer} sx={{ padding: 0 }}>
           <Controller
             name="name"
             control={control}
@@ -259,6 +264,11 @@ export default function ProductModal({
             render={({ field, fieldState }) => (
               <TextField
                 {...field}
+                value={field.value === 0 ? '' : field.value}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  field.onChange(val === '' ? '' : Number(val));
+                }}
                 type="number"
                 placeholder="Stock"
                 fullWidth
@@ -302,6 +312,11 @@ export default function ProductModal({
               <TextField
                 {...field}
                 type="number"
+                value={field.value === 0 ? '' : field.value}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  field.onChange(val === '' ? '' : Number(val));
+                }}
                 placeholder="Price"
                 fullWidth
                 slotProps={{
