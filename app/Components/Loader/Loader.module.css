@@ -16,7 +16,14 @@
   border-radius: 50%;  
   animation: spin 0.9s linear infinite;
 }
-
+.loaderMini {
+  width: 13px; 
+  height: 13px;
+  border: 2px solid rgba(255, 255, 255, 0.3); 
+  border-top: 2px solid #ffffff;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
 @keyframes spin {
   0% {
     transform: rotate(0deg);

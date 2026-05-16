@@ -6,6 +6,8 @@ import css from './LogoutButton.module.css';
 import toast from 'react-hot-toast';
 import { logout } from '@/app/lib/clientApi';
 import { useUIStore } from '@/app/store/uiStore';
+import { useState } from 'react';
+import { Loader } from '../Loader/Loader';
 
 export default function LogoutButton() {
   const router = useRouter();
@@ -13,8 +15,9 @@ export default function LogoutButton() {
     (state) => state.clearIsAuthenticated
   );
   const { closeSidebar } = useUIStore();
-
+const [isLoggingOut, setIsLoggingOut] = useState(false);
   const handleLogout = async () => {
+    setIsLoggingOut(true);
     try {
       await logout();
       clearIsAuthenticated();
@@ -23,6 +26,7 @@ export default function LogoutButton() {
       router.push('/login');
     } catch (error) {
       toast.error('Error logging out');
+      setIsLoggingOut(false);
     }
   };
 
@@ -32,11 +36,16 @@ export default function LogoutButton() {
       onClick={handleLogout}
       aria-label="Log out"
       title="Log out"
+      disabled={isLoggingOut}
+      style={{ opacity: isLoggingOut ? 0.7 : 1, cursor: isLoggingOut ? 'not-allowed' : 'pointer' }}
     >
-        <svg className={css.logoutBtnIcon} width="13"
-        height="13" aria-hidden='true'>
-            <use href='/sprite.svg#icon-logout'></use>
-        </svg>
+        {isLoggingOut ? (
+          <Loader mini />
+        ) : (
+          <svg className={css.logoutBtnIcon} width="13" height="13" aria-hidden='true'>
+              <use href='/sprite.svg#icon-logout'></use>
+          </svg>
+        )}
     </button>
   );
 }
