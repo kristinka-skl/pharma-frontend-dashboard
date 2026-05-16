@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     title: 'E-Pharmacy Dashboard',
     description:
       'Streamline your pharmacy management. Track income, expenses, recent customers, and manage orders efficiently.',
-    url: '', 
+    url: 'https://pharma-frontend-dashboard.vercel.app', 
     siteName: 'E-Pharmacy',
     images: [
       {

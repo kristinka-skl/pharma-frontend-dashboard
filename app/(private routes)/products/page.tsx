@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     title: 'Products | E-Pharmacy',
     description:
       'Keep your pharmacy inventory up to date. Easily manage medication stock, pricing, and categories.',
-    url: '', 
+    url: 'https://pharma-frontend-dashboard.vercel.app/products', 
     siteName: 'E-Pharmacy',
     images: [
       {

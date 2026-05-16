@@ -16,7 +16,7 @@
   border: 1px solid rgba(29, 30, 33, 0.1);
   border-radius: 60px;
   padding: 13px 18px;
-  width: 215px;
+  
   transition: border-color 0.3s ease;
 }
 

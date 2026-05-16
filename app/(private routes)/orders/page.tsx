@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     title: 'Orders | E-Pharmacy',
     description:
       'Track and manage your pharmacy orders efficiently. View order history, customer info, and current statuses.',
-    url: '', 
+    url: 'https://pharma-frontend-dashboard.vercel.app/orders', 
     siteName: 'E-Pharmacy',
     images: [
       {

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     title: 'Suppliers | E-Pharmacy',
     description:
       'Maintain strong relationships with your partners. Track supplier details, active contracts, and supply history.',
-    url: '', 
+    url: 'https://pharma-frontend-dashboard.vercel.app/suppliers', 
     siteName: 'E-Pharmacy',
     images: [
       {

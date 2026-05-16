@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     title: 'Customers | E-Pharmacy',
     description:
       'Keep track of your pharmacy clients. View customer profiles and contact information.',
-    url: '', 
+    url: 'https://pharma-frontend-dashboard.vercel.app/customers', 
     siteName: 'E-Pharmacy',
     images: [
       {

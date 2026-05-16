@@ -47,6 +47,6 @@ export const config = {
     '/orders/:path*',
     '/suppliers/:path*',    
     '/dashboard',
-    '/login' 
+    '/login',
   ],
 };
