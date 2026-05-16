@@ -34,6 +34,7 @@ export default function SuppliersPageClient() {
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(
     null
   );
+ const [lastAction, setLastAction] = useState<'search' | 'pagination' | null>(null);
 
   const { data, isError, error, refetch, isSuccess, isLoading, isFetching } =
     useQuery({
@@ -76,6 +77,7 @@ export default function SuppliersPageClient() {
       toast.error(message);
     },
   });
+  
   const handleOpenAddModal = () => {
     setSelectedSupplier(null);
     setIsModalOpen(true);
@@ -106,6 +108,7 @@ export default function SuppliersPageClient() {
   const totalPagesFromBackend = data?.totalPages || 0;
 
   const handlePageChange = (newPage: number) => {
+    setLastAction('pagination');
     const params = new URLSearchParams(searchParams.toString());
     params.set('page', newPage.toString());
     router.push(`${pathname}?${params.toString()}`);
@@ -119,7 +122,8 @@ export default function SuppliersPageClient() {
     <section className={css.suppliers}>
       <h1 className={css.visuallyHidden}>Suppliers page</h1>
       <div className={css.searchFormAndActions}>
-        <SearchForm placeholder="User Name" isFiltering={isFetching} />
+        <SearchForm placeholder="User Name" isFiltering={isFetching && lastAction === 'search'} 
+          onSearch={() => setLastAction('search')} />
         <div className={css.actions}>
           <button aria-label='add supplier' className={css.addBtn} onClick={handleOpenAddModal}>
             <svg className={css.addBtnIcon} width={18} height={18}>

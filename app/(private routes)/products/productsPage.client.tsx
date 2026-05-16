@@ -35,6 +35,7 @@ export default function ProductsPageClient() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [lastAction, setLastAction] = useState<'search' | 'pagination' | null>(null);
 
   const { data, isError, error, refetch, isSuccess, isLoading, isFetching } =
     useQuery({
@@ -120,6 +121,7 @@ export default function ProductsPageClient() {
   const totalPagesFromBackend = data?.totalPages || 0;
 
   const handlePageChange = (newPage: number) => {
+    setLastAction('pagination');
     const params = new URLSearchParams(searchParams.toString());
     params.set('page', newPage.toString());
     router.push(`${pathname}?${params.toString()}`);
@@ -133,7 +135,8 @@ export default function ProductsPageClient() {
     <section className={css.products}>
       <h1 className={css.visuallyHidden}>Products page</h1>
       <div className={css.searchFormAndActions}>
-        <SearchForm placeholder="Product Name" isFiltering={isFetching} />
+        <SearchForm placeholder="Product Name" isFiltering={isFetching && lastAction === 'search'} 
+          onSearch={() => setLastAction('search')}/>
         <div className={css.actions}>
           <button aria-label='add product' className={css.addBtn} onClick={handleOpenAddModal}>
             <svg className={css.addBtnIcon} width={18} height={18}>

@@ -7,7 +7,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import toast, { Toaster } from 'react-hot-toast';
 import SearchForm from '@/app/Components/SearchForm/SearchForm';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation'; 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import DotsPagination from '@/app/Components/Pagination/DotsPagination';
 import { perPage } from '@/app/_utils/utils';
 import { Loader } from '@/app/Components/Loader/Loader';
@@ -19,6 +19,7 @@ export default function OrdersPageClient() {
 
   const search = searchParams.get('search') || undefined;
   const page = Number(searchParams.get('page')) || 1;
+  const [lastAction, setLastAction] = useState<'search' | 'pagination' | null>(null);
 
   const { data, isError, error, refetch, isSuccess, isLoading, isFetching } = useQuery({
     
@@ -37,7 +38,8 @@ export default function OrdersPageClient() {
 
   const totalPagesFromBackend = data?.totalPages || 0;
   
-  const handlePageChange = (newPage: number) => {    
+  const handlePageChange = (newPage: number) => {  
+    setLastAction('pagination');  
     const params = new URLSearchParams(searchParams.toString());    
     params.set('page', newPage.toString());    
     router.push(`${pathname}?${params.toString()}`);
@@ -50,7 +52,8 @@ export default function OrdersPageClient() {
   return (
     <section className={css.ordersSection}>
       <h1 className={css.visuallyHidden}>Orders page</h1>
-      <SearchForm placeholder="User Name" isFiltering={isFetching}/>
+      <SearchForm placeholder="User Name" isFiltering={isFetching && lastAction === 'search'} 
+          onSearch={() => setLastAction('search')}/>
       {isError && (
         <div className={css.errorContainer}>
           <p className={css.errorMessage}>

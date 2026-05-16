@@ -5,7 +5,7 @@ import CustomersTable from '@/app/Components/Table/CustomersTable';
 import { getCustomers } from '@/app/lib/clientApi';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import css from './customersPage.module.css';
 import SearchForm from '@/app/Components/SearchForm/SearchForm';
@@ -19,6 +19,7 @@ export default function CustomersPageClient() {
 
   const search = searchParams.get('search') || undefined;
   const page = Number(searchParams.get('page')) || 1;
+  const [lastAction, setLastAction] = useState<'search' | 'pagination' | null>(null);
 
   const { data, isError, error, refetch, isSuccess, isLoading, isFetching } =
     useQuery({
@@ -37,6 +38,7 @@ export default function CustomersPageClient() {
   const totalPagesFromBackend = data?.totalPages || 0;
 
   const handlePageChange = (newPage: number) => {
+    setLastAction('pagination');
     const params = new URLSearchParams(searchParams.toString());
     params.set('page', newPage.toString());
     router.push(`${pathname}?${params.toString()}`);
@@ -47,7 +49,8 @@ export default function CustomersPageClient() {
   return (
     <section className={css.customersSection}>
       <h1 className={css.visuallyHidden}>Customers page</h1>
-      <SearchForm placeholder="User Name" isFiltering={isFetching} />
+      <SearchForm placeholder="User Name" isFiltering={isFetching && lastAction === 'search'} 
+          onSearch={() => setLastAction('search')} />
 
       {isError && (
         <div className={css.errorContainer}>

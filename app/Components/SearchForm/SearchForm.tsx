@@ -11,13 +11,14 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 interface SearchFormProps {
   placeholder: string;
   isFiltering?: boolean;
+  onSearch?: () => void;
 }
 
 const schema = yup.object({
   name: yup.string().trim().default('')
 });
 
-export default function SearchForm({placeholder, isFiltering}: SearchFormProps) {
+export default function SearchForm({placeholder, isFiltering, onSearch}: SearchFormProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -32,16 +33,16 @@ export default function SearchForm({placeholder, isFiltering}: SearchFormProps) 
   });
 
   const onSubmit = async (data: SearchFormData) => {
+    if (onSearch) {
+      onSearch();
+    }
     try {  
-
       const params = new URLSearchParams(searchParams);
-
       if (data.name) {
         params.set('search', data.name);
         params.delete('page');    
     }
       else params.delete('search');
-
       router.replace(
         `${pathname}?${params.toString()}`, { scroll: false }
       );
