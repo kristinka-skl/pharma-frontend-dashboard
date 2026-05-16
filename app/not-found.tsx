@@ -8,7 +8,7 @@ export default function NotFound() {
       <p className={css.text}>
         Sorry, the page you&#39;re looking for doesn&#39;t exist.
       </p>
-      <Link href="/dashboard" className={css.button}>
+      <Link href="/dashboard" className={css.button} aria-label='go to dashboard'>
         Go to Home
       </Link>
     </div>

@@ -67,6 +67,7 @@ export default function SearchForm({placeholder, isFiltering}: SearchFormProps) 
         >
           <input
             id="name"
+            aria-label='name to search'
             className={css.input}
             {...register('name')}
             placeholder={placeholder}
@@ -77,9 +78,9 @@ export default function SearchForm({placeholder, isFiltering}: SearchFormProps) 
       </div>
 
       <div className={css.actions}>
-        <button type="submit" className={css.submitBtn} disabled={isSubmitting || isFiltering}>
+        <button aria-label='search' type="submit" className={css.submitBtn} disabled={isSubmitting || isFiltering}>
           <svg className={css.filterIcon}>
-            <use href="/sprite.svg#icon-filter"></use>
+            <use href="/sprite.svg#icon-filter" aria-hidden='true'></use>
           </svg>
           {isFiltering ? 'Filtering...' : 'Filter'}
         </button>

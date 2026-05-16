@@ -25,7 +25,7 @@ export default function DashboardPageClient() {
           <p className={css.errorMessage}>
             Oops! Failed to load dashboard data. {error instanceof Error ? error.message : ''}
           </p>
-          <button onClick={() => refetch()} className={css.retryBtn}>
+          <button aria-label='try again' onClick={() => refetch()} className={css.retryBtn}>
             Try again
           </button>
         </div>

@@ -27,14 +27,14 @@ export default function LogoutButton() {
   };
 
   return (
-    <button
+    <button 
       className={css.logoutBtn}
       onClick={handleLogout}
       aria-label="Log out"
       title="Log out"
     >
         <svg className={css.logoutBtnIcon} width="13"
-        height="13">
+        height="13" aria-hidden='true'>
             <use href='/sprite.svg#icon-logout'></use>
         </svg>
     </button>

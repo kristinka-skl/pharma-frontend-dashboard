@@ -18,8 +18,8 @@ export default function Header() {
 
   return (
     <header className={css.header}>
-      <button className={css.burgerMenu} onClick={toggleSidebar}>
-        <svg className={css.burgerMenuIcon} width="32" height="32">
+      <button aria-label='open nobile menu' className={css.burgerMenu} onClick={toggleSidebar}>
+        <svg className={css.burgerMenuIcon} width="32" height="32" aria-hidden='true'>
           <use href="/sprite.svg#icon-menu-burger"></use>
         </svg>
       </button>

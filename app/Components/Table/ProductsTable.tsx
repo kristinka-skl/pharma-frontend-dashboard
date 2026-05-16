@@ -88,6 +88,7 @@ export default function ProductsTable({
                     <TableCell align="left">
                       <div className={cssModule.actions}>
                         <button
+                        aria-label='edit'
                           className={`${cssModule.actionBtn} ${cssModule.updBtn}`}
                           onClick={() => onEdit(row)}
                         >
@@ -95,11 +96,13 @@ export default function ProductsTable({
                             className={cssModule.icon}
                             width={16}
                             height={16}
+                            aria-hidden='true'
                           >
                             <use href="./sprite.svg#icon-edit"></use>
                           </svg>
                         </button>
                         <button
+                        aria-label='delete'
                           className={`${cssModule.actionBtn} ${cssModule.delBtn}`}
                           onClick={() => onDelete(row._id)}
                         >
@@ -107,6 +110,7 @@ export default function ProductsTable({
                             className={cssModule.icon}
                             width={16}
                             height={16}
+                            aria-hidden='true'
                           >
                             <use href="./sprite.svg#icon-trash"></use>
                           </svg>

@@ -5,7 +5,7 @@ import { perPage } from "@/app/_utils/utils";
 import { Metadata } from "next";
 
 interface OrdersPageProps {
-  params: Promise<{ search: string; page: number }>;
+  searchParams: Promise<{ search: string; page: number }>;
 }
 
 export const metadata: Metadata = {
@@ -30,8 +30,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function OrdersPage({ params }: OrdersPageProps) {
-  const { search, page } = await params;
+export default async function OrdersPage({ searchParams }: OrdersPageProps) {
+  const resolvedSearchParams = await searchParams;
+  const search = resolvedSearchParams.search || undefined;
+  const page = Number(resolvedSearchParams.page) || 1;
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['orders', search, page],

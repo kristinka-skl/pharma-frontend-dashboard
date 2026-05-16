@@ -135,7 +135,7 @@ export default function ProductsPageClient() {
       <div className={css.searchFormAndActions}>
         <SearchForm placeholder="Product Name" isFiltering={isFetching} />
         <div className={css.actions}>
-          <button className={css.addBtn} onClick={handleOpenAddModal}>
+          <button aria-label='add product' className={css.addBtn} onClick={handleOpenAddModal}>
             <svg className={css.addBtnIcon} width={18} height={18}>
               <use href="/sprite.svg#icon-plus"></use>
             </svg>
@@ -150,7 +150,7 @@ export default function ProductsPageClient() {
             Oops! Failed to load products.{' '}
             {error instanceof Error ? error.message : ''}
           </p>
-          <button onClick={() => refetch()} className={css.retryBtn}>
+          <button aria-label='try again' onClick={() => refetch()} className={css.retryBtn}>
             Try again
           </button>
         </div>

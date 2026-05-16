@@ -131,6 +131,7 @@ const getStatusStyles = (status: string) => {
                     <TableCell align="left">
                       <div className={cssModule.actions}>
                         <button
+                        aria-label='edit'
                           className={`${cssModule.actionBtn} ${cssModule.updBtn} ${cssModule.updBtnWithText}`}
                           onClick={() => onEdit(row)}
                         >
@@ -138,6 +139,7 @@ const getStatusStyles = (status: string) => {
                             className={cssModule.icon}
                             width={16}
                             height={16}
+                            aria-hidden='true'
                           >
                             <use href="./sprite.svg#icon-edit"></use>
                           </svg>

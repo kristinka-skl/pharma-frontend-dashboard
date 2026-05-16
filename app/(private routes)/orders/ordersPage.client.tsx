@@ -56,7 +56,7 @@ export default function OrdersPageClient() {
           <p className={css.errorMessage}>
             Oops! Failed to load orders. {error instanceof Error ? error.message : ''}
           </p>
-          <button onClick={() => refetch()} className={css.retryBtn}>
+          <button aria-label='try again' onClick={() => refetch()} className={css.retryBtn}>
             Try again
           </button>
         </div>

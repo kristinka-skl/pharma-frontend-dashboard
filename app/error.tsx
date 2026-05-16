@@ -20,7 +20,7 @@ export default function Error({ error, reset }: Props) {
         {error.message ||
           'We encountered an unexpected error while trying to load this page.'}
       </p>
-      <button type="button" className={css.button} onClick={() => reset()}>
+      <button type="button" aria-label='retry' className={css.button} onClick={() => reset()}>
         Try again
       </button>
     </div>

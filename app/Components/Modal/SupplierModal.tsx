@@ -1,8 +1,6 @@
 'use client';
-
 import { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Dialog,
@@ -17,7 +15,6 @@ import css from './ProductModal.module.css';
 import { Supplier, SupplierFormData } from '@/app/types/pharma';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import dayjs from 'dayjs';
 import { useSupplierDraftStore } from '@/app/store/supplierDraftStore';
@@ -172,8 +169,8 @@ export default function SupplierModal({
         <Typography className={css.modalTitle}>
           {isEditMode ? 'Edit supplier' : 'Add a new supplier'}
         </Typography>
-        <button className={css.closeBtn} onClick={onClose} type="button">
-          <svg className={css.closeBtnIcon} width="32" height="32">
+        <button aria-label='Close modal' className={css.closeBtn} onClick={onClose} type="button">
+          <svg className={css.closeBtnIcon} width="32" height="32" aria-hidden="true">
             <use href="/sprite.svg#icon-close"></use>
           </svg>
         </button>
@@ -203,6 +200,7 @@ export default function SupplierModal({
                 slotProps={{
                   htmlInput: {
                     maxLength: MAX_STRING,
+                    'aria-label': 'Suppliers Info',
                   },
                 }}
                 sx={getInputSx(fieldState.isDirty, !!fieldState.error)}
@@ -223,6 +221,7 @@ export default function SupplierModal({
                 slotProps={{
                   htmlInput: {
                     maxLength: MAX_STRING,
+                    'aria-label': 'Address', 
                   },
                 }}
                 sx={getInputSx(fieldState.isDirty, !!fieldState.error)}
@@ -243,6 +242,7 @@ export default function SupplierModal({
                 slotProps={{
                   htmlInput: {
                     maxLength: MAX_STRING,
+                    'aria-label': 'Company', 
                   },
                 }}
                 sx={getInputSx(fieldState.isDirty, !!fieldState.error)}
@@ -273,6 +273,7 @@ export default function SupplierModal({
                         height={18}
                         fill="none"
                         stroke="var(--accent)"
+                        aria-hidden="true"
                       >
                         <use href="/sprite.svg#icon-calendar"></use>
                       </svg>
@@ -283,8 +284,8 @@ export default function SupplierModal({
                       fullWidth: true,
                       error: !!fieldState.error,
                       helperText: fieldState.error?.message,
-                      sx: getInputSx(fieldState.isDirty, !!fieldState.error),
-                    },
+                      sx: getInputSx(fieldState.isDirty, !!fieldState.error),                      
+                    } ,
                     popper: {
                       placement: 'bottom',
                       sx: {
@@ -328,7 +329,11 @@ export default function SupplierModal({
                 placeholder="Amount"
                 fullWidth
                 slotProps={{
-                  htmlInput: { max: MAX_AMOUNT, maxLength: 8 },
+                  htmlInput: { 
+                    max: MAX_AMOUNT, 
+                    maxLength: 8,
+                    'aria-label': 'Amount', 
+                  },
                 }}
                 sx={getInputSx(fieldState.isDirty, !!fieldState.error)}
                 error={!!fieldState.error}
@@ -350,6 +355,7 @@ export default function SupplierModal({
                 helperText={fieldState.error?.message}
                 slotProps={{
                   select: {
+                    inputProps: { 'aria-label': 'Status' },
                     displayEmpty: true,
 
                     renderValue: (value: unknown) =>
@@ -366,39 +372,26 @@ export default function SupplierModal({
                         paper: {
                           sx: {
                             height: '140px',
-
                             marginTop: '8px',
-
                             boxShadow: 'none',
-
                             bgcolor: COLORS.green,
-
                             color: 'white',
-
                             borderRadius: '12px',
-
                             '& .MuiMenuItem-root:hover': {
                               bgcolor: 'rgba(255, 255, 255, 0.1)',
                             },
-
                             '&::-webkit-scrollbar': {
                               width: '6px',
                             },
-
                             '&::-webkit-scrollbar-track': {
                               backgroundColor: 'transparent',
-
                               marginTop: '8px',
-
                               marginBottom: '8px',
                             },
-
                             '&::-webkit-scrollbar-thumb': {
                               backgroundColor: 'rgba(255, 255, 255, 0.4)',
-
                               borderRadius: '10px',
                             },
-
                             '&::-webkit-scrollbar-thumb:hover': {
                               backgroundColor: 'rgba(255, 255, 255, 0.6)',
                             },
@@ -425,6 +418,7 @@ export default function SupplierModal({
 
         <div className={css.actions}>
           <button
+            aria-label={isEditMode ? 'Save changes' : 'Add new supplier'}
             type="submit"
             className={`${css.baseBtn} ${css.submitBtn}`}
             disabled={isSubmitting}
@@ -440,6 +434,7 @@ export default function SupplierModal({
 
           <button
             type="button"
+            aria-label='Cancel'
             onClick={onClose}
             className={`${css.baseBtn} ${css.cancelBtn}`}
             disabled={isSubmitting}

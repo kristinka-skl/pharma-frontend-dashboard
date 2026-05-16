@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Dialog,
@@ -149,8 +148,8 @@ export default function ProductModal({
         <Typography className={css.modalTitle}>
           {isEditMode ? 'Edit product' : 'Add a new product'}
         </Typography>
-        <button className={css.closeBtn} onClick={onClose} type="button">
-          <svg className={css.closeBtnIcon} width="26" height="26">
+        <button aria-label="Close modal" className={css.closeBtn} onClick={onClose} type="button">
+          <svg className={css.closeBtnIcon} width="26" height="26" aria-hidden="true">
             <use href="/sprite.svg#icon-close"></use>
           </svg>
         </button>
@@ -179,6 +178,7 @@ export default function ProductModal({
                 slotProps={{
                   htmlInput: {
                     maxLength: MAX_STRING,
+                    'aria-label': 'Product Info', 
                   },
                 }}
                 sx={getInputSx(fieldState.isDirty, !!fieldState.error)}
@@ -201,6 +201,7 @@ export default function ProductModal({
                 helperText={fieldState.error?.message}
                 slotProps={{
                   select: {
+                    inputProps: { 'aria-label': 'Category' }, 
                     displayEmpty: true,
                     renderValue: (value: unknown) =>
                       (value as string) || (
@@ -276,6 +277,7 @@ export default function ProductModal({
                   htmlInput: {
                     max: MAX_STOCK,
                     maxLength: 8,
+                    'aria-label': 'Stock', 
                   },
                 }}
                 sx={getInputSx(fieldState.isDirty, !!fieldState.error)}
@@ -296,6 +298,7 @@ export default function ProductModal({
                 slotProps={{
                   htmlInput: {
                     maxLength: MAX_STRING,
+                    'aria-label': 'Suppliers', 
                   },
                 }}
                 sx={getInputSx(fieldState.isDirty, !!fieldState.error)}
@@ -323,6 +326,7 @@ export default function ProductModal({
                   htmlInput: {
                     max: MAX_PRICE,
                     maxLength: 8,
+                    'aria-label': 'Price', 
                   },
                 }}
                 sx={getInputSx(fieldState.isDirty, !!fieldState.error)}
@@ -335,6 +339,7 @@ export default function ProductModal({
 
         <div className={css.actions}>
           <button
+            aria-label={isEditMode ? 'Save product changes' : 'Add new product'} 
             type="submit"
             className={`${css.baseBtn} ${css.submitBtn}`}
             disabled={isSubmitting}
@@ -350,6 +355,7 @@ export default function ProductModal({
 
           <button
             type="button"
+            aria-label="Cancel" 
             onClick={onClose}
             className={`${css.baseBtn} ${css.cancelBtn}`}
             disabled={isSubmitting}

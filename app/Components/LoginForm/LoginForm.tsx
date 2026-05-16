@@ -98,6 +98,7 @@ export default function LoginForm() {
           />
           <button
             type="button"
+            aria-label='show password'
             className={css.eyeButton}
             onClick={() => setShowPassword(!showPassword)}
           >
@@ -121,7 +122,7 @@ export default function LoginForm() {
       </div>
 
       <div className={css.actions}>
-        <button type="submit" className={css.submitBtn} disabled={isSubmitting}>
+        <button aria-label='log in' type="submit" className={css.submitBtn} disabled={isSubmitting}>
           {isSubmitting ? 'Logging in...' : 'Log in'}
         </button>
        

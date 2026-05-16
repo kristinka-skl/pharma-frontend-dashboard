@@ -9,12 +9,19 @@ import { usePathname } from 'next/navigation';
 export default function Sidebar() {
   const { isSidebarOpen, closeSidebar } = useUIStore();
   const pathname = usePathname();
+  
   return (
     <>
-      {isSidebarOpen && <div className={css.backdrop} onClick={closeSidebar} />}
-      <aside className={`${css.sidebar} ${isSidebarOpen ? css.open : ''}`}>
-        <button className={css.closeBtn} onClick={closeSidebar}>
-          <svg className={css.closeBtnIcon} width="32" height="32">
+      {isSidebarOpen && (
+        <div className={css.backdrop} onClick={closeSidebar} aria-hidden="true" />
+      )}
+      
+      <aside 
+        className={`${css.sidebar} ${isSidebarOpen ? css.open : ''}`}
+        aria-label="Main navigation"
+      >
+        <button aria-label="Close sidebar" className={css.closeBtn} onClick={closeSidebar}>
+          <svg className={css.closeBtnIcon} width="32" height="32" aria-hidden="true">
             <use href="/sprite.svg#icon-close"></use>
           </svg>
         </button>
@@ -25,11 +32,14 @@ export default function Sidebar() {
               href={`/dashboard`}
               className={css.menuLink}
               onClick={closeSidebar}
+              aria-label="Dashboard" 
+              aria-current={pathname === '/dashboard' ? 'page' : undefined} 
             >
               <svg
                 className={`${css.menuItemIcon} ${pathname === '/dashboard' ? css.active : ''}`}
                 width="16"
                 height="16"
+                aria-hidden="true" 
               >
                 <use href="/sprite.svg#icon-dashboard"></use>
               </svg>
@@ -40,11 +50,14 @@ export default function Sidebar() {
               href={`/orders`}
               className={css.menuLink}
               onClick={closeSidebar}
+              aria-label="Orders"
+              aria-current={pathname === '/orders' ? 'page' : undefined}
             >
               <svg
                 className={`${css.menuItemIcon} ${pathname === '/orders' ? css.active : ''}`}
                 width="16"
                 height="16"
+                aria-hidden="true"
               >
                 <use href="/sprite.svg#icon-shopping-cart"></use>
               </svg>
@@ -55,11 +68,14 @@ export default function Sidebar() {
               href={`/products`}
               className={css.menuLink}
               onClick={closeSidebar}
+              aria-label="Products"
+              aria-current={pathname === '/products' ? 'page' : undefined}
             >
               <svg
                 className={`${css.menuItemIcon} ${pathname === '/products' ? css.active : ''}`}
                 width="16"
                 height="16"
+                aria-hidden="true"
               >
                 <use href="/sprite.svg#icon-flask"></use>
               </svg>
@@ -70,11 +86,14 @@ export default function Sidebar() {
               href={`/suppliers`}
               className={css.menuLink}
               onClick={closeSidebar}
+              aria-label="Suppliers"
+              aria-current={pathname === '/suppliers' ? 'page' : undefined}
             >
               <svg
                 className={`${css.menuItemIcon} ${pathname === '/suppliers' ? css.active : ''}`}
                 width="16"
                 height="16"
+                aria-hidden="true"
               >
                 <use href="/sprite.svg#icon-pharmacy"></use>
               </svg>
@@ -85,11 +104,14 @@ export default function Sidebar() {
               href={`/customers`}
               className={css.menuLink}
               onClick={closeSidebar}
+              aria-label="Customers"
+              aria-current={pathname === '/customers' ? 'page' : undefined}
             >
               <svg
                 className={`${css.menuItemIcon} ${pathname === '/customers' ? css.active : ''}`}
                 width="16"
                 height="16"
+                aria-hidden="true"
               >
                 <use href="/sprite.svg#icon-users-menu"></use>
               </svg>

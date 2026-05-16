@@ -55,7 +55,7 @@ export default function CustomersPageClient() {
             Oops! Failed to load customers.
             {error instanceof Error ? error.message : ''}
           </p>
-          <button onClick={() => refetch()} className={css.retryBtn}>
+          <button aria-label='retry' onClick={() => refetch()} className={css.retryBtn}>
             Try again
           </button>
         </div>

@@ -121,7 +121,7 @@ export default function SuppliersPageClient() {
       <div className={css.searchFormAndActions}>
         <SearchForm placeholder="User Name" isFiltering={isFetching} />
         <div className={css.actions}>
-          <button className={css.addBtn} onClick={handleOpenAddModal}>
+          <button aria-label='add supplier' className={css.addBtn} onClick={handleOpenAddModal}>
             <svg className={css.addBtnIcon} width={18} height={18}>
               <use href="/sprite.svg#icon-plus"></use>
             </svg>
@@ -136,7 +136,7 @@ export default function SuppliersPageClient() {
             Oops! Failed to load suppliers.{' '}
             {error instanceof Error ? error.message : ''}
           </p>
-          <button onClick={() => refetch()} className={css.retryBtn}>
+          <button aria-label='try again' onClick={() => refetch()} className={css.retryBtn}>
             Try again
           </button>
         </div>

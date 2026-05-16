@@ -9,7 +9,7 @@ import { perPage } from '@/app/_utils/utils';
 import { Metadata } from 'next';
 
 interface ProductsPageProps {
-  params: Promise<{ search: string; page: number }>;
+  searchParams: Promise<{ search: string; page: number }>;
 }
 
 export const metadata: Metadata = {
@@ -34,8 +34,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function ProductsPage({ params }: ProductsPageProps) {
-  const { search, page } = await params;
+export default async function ProductsPage({ searchParams }: ProductsPageProps) {
+  const resolvedSearchParams = await searchParams;
+  const search = resolvedSearchParams.search || undefined;
+  const page = Number(resolvedSearchParams.page) || 1;
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['products', search, page],
